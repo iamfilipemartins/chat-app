@@ -1,4 +1,4 @@
-import { View, Text, TextInputProps, TextInput } from "react-native";
+import { View, Text, TextInputProps, TextInput, Pressable } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -7,12 +7,20 @@ interface InputProps extends TextInputProps {
   onChangeText: (value?: string) => void;
   placeholder?: string;
   editable?: boolean;
+  leftIconName?: keyof typeof Ionicons.glyphMap;
+  rightIconName?: keyof typeof Ionicons.glyphMap;
+  valid?: boolean;
+  rightIconClick?: () => void;
 }
 
 const Input: React.FC<InputProps> = ({
   onChangeText,
   placeholder,
   editable,
+  leftIconName,
+  rightIconName,
+  rightIconClick,
+  valid,
   ...props
 }) => {
   return (
@@ -20,7 +28,7 @@ const Input: React.FC<InputProps> = ({
       style={{ height: 56 }}
       className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-2xl"
     >
-      <Ionicons name="person-outline" size={24} color={Colors.primary} />
+      {leftIconName && <Ionicons name={leftIconName} size={24} color={valid ? Colors.primary : 'gray'} /> }
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
@@ -33,6 +41,12 @@ const Input: React.FC<InputProps> = ({
         placeholderTextColor={"gray"}
         {...props}
       />
+      {rightIconName && rightIconClick  && (
+        <Pressable onPress={rightIconClick}>
+          <Ionicons name={rightIconName} size={24} color={'gray'} /> 
+        </Pressable>
+      )}
+
     </View>
   );
 };

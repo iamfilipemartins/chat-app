@@ -3,7 +3,7 @@ import React from 'react'
 import { useAuthContext } from '@/context/auth';
 
 const Home: React.FC = () => {
-  const { handleSignOut } = useAuthContext();
+  const { handleSignOut, user } = useAuthContext();
 
   const signOut = async () => {
     await handleSignOut();
@@ -12,6 +12,7 @@ const Home: React.FC = () => {
   return (
     <View>
       <Text>Home</Text>
+      <Text>{JSON.stringify(user)}</Text>
       <Pressable onPress={signOut}>
         <Text>
           Sign Out

@@ -12,24 +12,24 @@ const Layout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const insideChatFlow = segments[0] === 'src';
-    if(!logged){
+    const insideChatFlow = segments[0] === "(app)";
+    if (!logged) {
       router.replace("signIn");
     }
-    if(logged && !insideChatFlow){
+    if (logged && !insideChatFlow) {
       router.replace("home");
     }
   }, [logged]);
 
   return <Slot />;
-}
+};
 
 const RootLayout = () => {
   return (
     <AuthContextProvider>
       <Layout />
     </AuthContextProvider>
-  )
-}
+  );
+};
 
 export default RootLayout;
