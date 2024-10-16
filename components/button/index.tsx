@@ -1,5 +1,6 @@
 import { View, Text, ActivityIndicator, Pressable } from "react-native";
 import React from "react";
+import { Colors } from "@/constants/Colors";
 
 interface ButtonProps {
   title?: string;
@@ -15,7 +16,6 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
-  disabled,
   title,
   onPress,
   isLoading,
@@ -23,21 +23,13 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <View
       style={{ height: 56 }}
-      className={
-        disabled
-          ? "bg-gray-200 flex-row items-center rounded-2xl justify-center w-full"
-          : "bg-emerald-400 flex-row items-center rounded-2xl justify-center w-full"
-      }
+      className={"bg-emerald-400 flex-row items-center rounded-2xl justify-center w-full"}
     >
       <Pressable
-        className={
-          disabled
-            ? "bg-gray-200 rounded-xl justify-center items-center w-full"
-            : "bg-emerald-400 rounded-xl justify-center items-center w-full"
-        }
+        className={"bg-emerald-400 rounded-xl justify-center items-center w-full"}
         style={{ height: 56 }}
         onPress={onPress}
-        disabled={disabled}
+        disabled={isLoading}
       >
         {isLoading ? (
           <ActivityIndicator size="large" color={'white'} />
