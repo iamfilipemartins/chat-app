@@ -31,3 +31,4 @@ export const db = getFirestore(app);
 
 export const users = collection(db, 'users');
 export const chats = collection(db, 'chats');
+export const chat = collection(db, 'chat');

@@ -7,7 +7,7 @@ import KeyboardView from "@/components/keyboardView";
 import { useAuthContext } from "@/context/auth";
 import { isValidEmail } from "@/utils";
 
-const signIn: React.FC = () => {
+const Join: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(true);
   const [hidePassword, setHidePassword] = useState<boolean>(true);
@@ -30,7 +30,6 @@ const signIn: React.FC = () => {
   };
 
   const handlePressJoin = async () => {
-    console.log("handlePressJoin");
     setLoading(true);
 
     if (emailRef?.current && passwordRef?.current) {
@@ -58,10 +57,10 @@ const signIn: React.FC = () => {
   }, [emailValid, passwordValid]);
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-slate-50">
       <KeyboardView>
         <StatusBar style="dark" />
-        <View className="flex-1 items-center justify-center p-8">
+        <View className="flex-1 items-center justify-center p-4">
           <View className="flex-1 items-center justify-center">
             <Image
               style={{ height: 160 }}
@@ -103,4 +102,4 @@ const signIn: React.FC = () => {
   );
 };
 
-export default signIn;
+export default Join;

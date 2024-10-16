@@ -13,11 +13,17 @@ const Layout = () => {
 
   useEffect(() => {
     const insideChatFlow = segments[0] === "(app)";
-    if (!logged) {
-      router.replace("signIn");
+
+    if(typeof logged === undefined) {
+      return;
     }
+
+    if (!logged) {
+      router.replace("join");
+    }
+    
     if (logged && !insideChatFlow) {
-      router.replace("home");
+      router.replace("chats");
     }
   }, [logged]);
 

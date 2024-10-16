@@ -12,7 +12,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth, db } from "@/firebaseConfig";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 interface AuthProps {
   handleSignIn: (email: string, password: string) => void;
   handleSignOut: () => void;
@@ -23,7 +23,7 @@ interface AuthProps {
 const AuthContext = createContext<AuthProps>({
   handleSignIn: () => null,
   handleSignOut: () => null,
-  user: null,
+  user: undefined,
   logged: false,
 });
 
@@ -40,22 +40,17 @@ export const useAuthContext = (): AuthProps => {
 };
 
 export const AuthContextProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(undefined);
   const [logged, setLogged] = useState(false);
 
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setLogged(true);
-        setUser(user);
-      } else {
-        setLogged(false);
-        setUser(null);
-      }
-    });
-
-    return unsub;
-  }, []);
+  const updateUser = async (userId: string) => {
+    const userFromDb = await getDoc(doc(db, 'users', userId));
+    if(userFromDb.exists()){
+      const userDataFromDb = userFromDb.data();
+      setUser({...user, ...userDataFromDb});
+      setLogged(true);
+    }
+  };
 
   const handleSignIn = async (email: string, password: string) => {
     try {
@@ -72,19 +67,16 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
       return { success: true };
     } catch (error: any) {
-      console.log(error);
       if (error.message.includes("auth/email-already-in-use")) {
         try {
           await signInWithEmailAndPassword(auth, email, password);
           return { success: true, msg: error.message };
         } catch (e: any) {
           setUser(null);
-          setLogged(false);
           return { success: false, msg: e.message };
         }
       }
       setUser(null);
-      setLogged(false);
       return { success: false, msg: error.message };
     }
   };
@@ -96,10 +88,22 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       setLogged(false);
       return { success: true };
     } catch (error: any) {
-      setLogged(true);
       return { success: false, msg: error.message.error };
     }
   };
+
+  useEffect(() => {
+    const changeState = onAuthStateChanged(auth, (userChanged) => {
+      if (userChanged) {
+        setUser(userChanged);
+        updateUser(userChanged.uid);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return changeState;
+  }, []);
 
   return (
     <AuthContext.Provider

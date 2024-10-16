@@ -26,7 +26,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <View
       style={{ height: 56 }}
-      className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-2xl"
+      className="flex-row gap-4 px-4 bg-neutral-200 items-center rounded-2xl"
     >
       {leftIconName && <Ionicons name={leftIconName} size={24} color={valid ? Colors.primary : 'gray'} /> }
       <TextInput

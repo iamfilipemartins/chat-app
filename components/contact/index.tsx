@@ -4,11 +4,13 @@ import React from "react";
 import { Pressable, Text, View } from "react-native";
 
 interface Props {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   leftIconName?: keyof typeof Ionicons.glyphMap;
   rightIconName?: keyof typeof Ionicons.glyphMap;
+  rightText?: string;
   onPress?: () => void;
+  lastContact:boolean;
 }
 
 const Contact: React.FC<Props> = ({
@@ -16,8 +18,9 @@ const Contact: React.FC<Props> = ({
   description,
   leftIconName,
   rightIconName,
-  onPress,
-  ...props
+  rightText,
+  lastContact,
+  onPress
 }) => {
   const content = (
     <>
@@ -27,23 +30,24 @@ const Contact: React.FC<Props> = ({
         </View>
       )}
 
-      <View>
-        {title && <Text>{title}</Text>}
-        {description && <Text>{description}</Text>}
+      <View className="justify-between items-start">
+        {title && <Text style={{ fontSize: 16}} className="font-medium mb-2">{title}</Text>}
+        {description && <Text style={{ fontSize: 12 }} className="font-regular">{description}</Text>}
       </View>
 
-      {rightIconName && (
-        <View>
-          <Ionicons name={rightIconName} size={24} color={Colors.primary} />
+      {(rightIconName || rightText) && (
+        <View className="flex-row justify-between items-center">
+          {rightText && <Text style={{ fontSize: 12 }} className="font-regular mr-4">{rightText}</Text>}
+          {rightIconName && <Ionicons name={rightIconName} size={16} color={Colors.primary} />}
         </View>
       )}
     </>
   );
 
   return (
-    <View {...props}>
+    <View style={{ height: 80 }} className={`${!lastContact && 'border-b border-b-emerald-400'}`}>
       {onPress && (
-        <Pressable onPress={onPress}>
+        <Pressable className='flex-row justify-between items-center p-4' onPress={onPress}>
           {content}
         </Pressable>
       )}

@@ -30,7 +30,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       <Pressable
         className={`${
-          disabled ? "bg-gray-200" : "bg-emerald-400"
+          disabled ? "bg-gray-200 border border-emerald-400" : "bg-emerald-400"
         } rounded-xl justify-center items-center w-full`}
         style={{ height: 56 }}
         onPress={onPress}
