@@ -6,6 +6,7 @@ import Button from "@/components/button";
 import KeyboardView from "@/components/keyboardView";
 import { useAuthContext } from "@/context/auth";
 import { isValidEmail } from "@/utils";
+import { Colors } from "@/constants/Colors";
 
 const Join: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -34,8 +35,11 @@ const Join: React.FC = () => {
 
     if (emailRef?.current && passwordRef?.current) {
       try {
-        const response: any = await handleSignIn(emailRef.current, passwordRef?.current);
-        if(!response?.success){
+        const response: any = await handleSignIn(
+          emailRef.current,
+          passwordRef?.current
+        );
+        if (!response?.success) {
           Alert.alert(
             "Something went wrong!",
             "This email is already in use. Check your params and try again later."
@@ -75,7 +79,8 @@ const Join: React.FC = () => {
               onChangeText={handleChangeEmail}
               keyboardType="email-address"
               leftIconName="mail-outline"
-              valid={emailValid}
+              leftIconColor={emailValid ? Colors.primary : undefined}
+              borderColor={emailValid ? "border-emerald-400" : undefined}
             />
             <Input
               editable={!loading}
@@ -85,9 +90,10 @@ const Join: React.FC = () => {
               secureTextEntry={hidePassword}
               autoCapitalize="none"
               autoCorrect={false}
-              valid={passwordValid}
+              leftIconColor={passwordValid ? Colors.primary : undefined}
               rightIconName={hidePassword ? "eye-outline" : "eye-off-outline"}
               rightIconClick={() => setHidePassword(!hidePassword)}
+              borderColor={passwordValid ? "border-emerald-400" : undefined}
             />
             <Button
               isLoading={loading}

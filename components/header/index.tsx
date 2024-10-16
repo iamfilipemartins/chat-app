@@ -7,21 +7,47 @@ import { Ionicons } from "@expo/vector-icons";
 interface Props {
   showPathname?: boolean;
   showUserEmail?: boolean;
+  userToChat?: any;
 }
 
 const Header: React.FC<Props> = ({
   showPathname = true,
   showUserEmail = true,
+  userToChat,
 }) => {
   const { user } = useAuthContext();
   const pathname = usePathname();
   const router = useRouter();
 
+  if (userToChat) {
+    return (
+      <View className="flex-row justify-between pt-16 pb-4 px-4 bg-emerald-400 items-center border-b border-b-emerald-500">
+        <View className="flex-row justify-between items-center">
+          {router.canGoBack() && (
+            <Pressable className="mr-4 " onPress={() => router.back()}>
+              <Ionicons
+                name={"chevron-back-outline"}
+                size={24}
+                color={"white"}
+              />
+            </Pressable>
+          )}
+            <Text
+              style={{ fontSize: 16, textTransform: "capitalize" }}
+              className="font-regular text-white"
+            >
+              {userToChat}
+            </Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <View className="flex-row justify-between pt-16 pb-4 px-4 bg-emerald-400 items-center">
+    <View className="flex-row justify-between pt-16 pb-4 px-4 bg-emerald-400 items-center border-b border-b-emerald-500">
       <View className="flex-row justify-between items-center">
         {router.canGoBack() && (
-          <Pressable className="mr-4" onPress={() => router.back()}>
+          <Pressable className="mr-4 " onPress={() => router.back()}>
             <Ionicons name={"chevron-back-outline"} size={24} color={"white"} />
           </Pressable>
         )}

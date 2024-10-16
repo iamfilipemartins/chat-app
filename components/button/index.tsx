@@ -23,16 +23,14 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <View
-      style={{ height: 56 }}
       className={`${
         disabled ? "bg-gray-200" : "bg-emerald-400"
-      } flex-row items-center rounded-2xl justify-center w-full`}
+      } flex-row items-center rounded-2xl justify-center w-full h-14`}
     >
       <Pressable
         className={`${
-          disabled ? "bg-gray-200 border border-emerald-400" : "bg-emerald-400"
-        } rounded-xl justify-center items-center w-full`}
-        style={{ height: 56 }}
+          disabled ? "bg-gray-200 border border-gray-500" : "bg-emerald-400 border border-emerald-500"
+        } rounded-xl justify-center items-center w-full h-14`}
         onPress={onPress}
         disabled={disabled}
       >
@@ -42,7 +40,7 @@ const Button: React.FC<ButtonProps> = ({
           <Text
             style={{ fontSize: 24 }}
             className={`font-bold ${
-              disabled ? "text-emerald-400" : "text-white"
+              disabled ? "text-gray-500" : "text-white"
             }`}
           >
             {title}

@@ -13,7 +13,7 @@ const KeyboardView: React.FC<PropsWithChildren> = ({ children }) => {
         style={{ flex: 1 }}
         bounces={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1}}
+        contentContainerStyle={{ flexGrow: 1 }}
       >
         {children}
       </ScrollView>

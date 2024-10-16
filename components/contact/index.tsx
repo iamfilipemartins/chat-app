@@ -45,7 +45,7 @@ const Contact: React.FC<Props> = ({
   );
 
   return (
-    <View style={{ height: 80 }} className={`${!lastContact && 'border-b border-b-emerald-400'}`}>
+    <View className={`${!lastContact && 'h-20 border-b border-b-emerald-400'}`}>
       {onPress && (
         <Pressable className='flex-row justify-between items-center p-4' onPress={onPress}>
           {content}

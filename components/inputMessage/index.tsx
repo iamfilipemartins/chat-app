@@ -10,26 +10,28 @@ interface InputProps extends TextInputProps {
   leftIconName?: keyof typeof Ionicons.glyphMap;
   leftIconColor?: string;
   leftIconClick?: () => void;
-  rightIconName?: keyof typeof Ionicons.glyphMap;
-  rightIconColor?: string;
-  rightIconClick?: () => void;
+  sendIconName?: keyof typeof Ionicons.glyphMap;
+  sendIconColor?: string;
+  sendIconClick?: () => void;
   backgroundColor?: string;
   borderColor?: string;
+  sendDisabled?: boolean;
 }
 
-const Input: React.FC<InputProps> = ({
+const InputMessage: React.FC<InputProps> = ({
   onChangeText,
-  placeholder,
+  placeholder = "Type your message",
   placeholderTextColor = "gray",
   editable,
   leftIconName,
   leftIconColor = "gray",
   leftIconClick = () => {},
-  rightIconName,
-  rightIconColor = "gray",
-  rightIconClick = () => {},
-  backgroundColor = 'bg-neutral-200',
-  borderColor = 'border-neutral-300',
+  sendIconName = "send-outline",
+  sendIconColor = "white",
+  sendIconClick = () => {},
+  backgroundColor = 'bg-white',
+  sendDisabled,
+  borderColor = `border-${sendDisabled ? 'gray' : 'emerald'}-400`,
   ...props
 }) => {
   return (
@@ -57,13 +59,13 @@ const Input: React.FC<InputProps> = ({
         {...props}
       />
 
-      {rightIconName && (
-        <Pressable onPress={rightIconClick}>
-          <Ionicons name={rightIconName} size={24} color={rightIconColor} />
+      {sendIconName && (
+        <Pressable disabled={sendDisabled} className={`bg-${sendDisabled ? 'gray' : 'emerald'}-400 p-2 rounded-full`} onPress={sendIconClick}>
+          <Ionicons name={sendIconName} size={20} color={sendIconColor} />
         </Pressable>
       )}
     </View>
   );
 };
 
-export default Input;
+export default InputMessage;
