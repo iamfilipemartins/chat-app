@@ -12,12 +12,11 @@ const Layout = () => {
   const router = useRouter();
 
   useEffect(() => {
-    
-    console.log('isLogged:', logged);
+    const insideChatFlow = segments[0] === 'src';
     if(!logged){
       router.replace("signIn");
     }
-    if(logged){
+    if(logged && !insideChatFlow){
       router.replace("home");
     }
   }, [logged]);

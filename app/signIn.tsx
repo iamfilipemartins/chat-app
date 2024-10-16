@@ -1,32 +1,49 @@
 import { View, Text, SafeAreaView, Alert, Image } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import Input from "@/components/input";
 import Button from "@/components/button";
 import KeyboardView from "@/components/keyboardView";
+import { useAuthContext } from "@/context/auth";
+import { isValidEmail } from "@/utils";
 
 const signIn: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(true);
 
-  const usernameRef = useRef<string | undefined>("");
+  const emailRef = useRef<string | undefined>("");
+  const { handleSignIn } = useAuthContext();
 
-  const handleChangeUsername = (value: string | undefined) => {
-    usernameRef.current = value;
+  const handleChangeEmail = (value: string | undefined) => {
+    setDisabled(loading || !isValidEmail(value));
+    emailRef.current = value;
   };
 
-  const handlePressJoin = () => {
-    if (!usernameRef.current) {
+  const handlePressJoin = async () => {
+    setLoading(true);
+
+    if (!emailRef.current) {
       Alert.alert(
         "Hey!",
-        "Please remember to fill your username before join the chat.."
+        "Please remember to fill your email before join the chat."
       );
     } else {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 3000);
+      try{
+        await handleSignIn(emailRef.current);
+      } catch (e: any){
+        Alert.alert(
+          "Sorry",
+          "We have some issues with your attempt to join our chat. Try again later."
+        );
+      }
     }
+
+    setLoading(false);
   };
+
+  useEffect(() => {
+    setDisabled(disabled || loading);
+  }, [loading]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -43,13 +60,15 @@ const signIn: React.FC = () => {
           <View className="flex-1 items-center justify-start gap-4">
             <Input
               editable={!loading}
-              placeholder="Username"
-              onChangeText={handleChangeUsername}
+              placeholder="E-mail"
+              onChangeText={handleChangeEmail}
+              keyboardType="email-address"
             />
             <Button
               isLoading={loading}
               title="Join"
               onPress={handlePressJoin}
+              disabled={disabled}
             />
           </View>
         </View>

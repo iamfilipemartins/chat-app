@@ -19,24 +19,31 @@ const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
   isLoading,
+  disabled,
 }) => {
   return (
     <View
       style={{ height: 56 }}
-      className={"bg-emerald-400 flex-row items-center rounded-2xl justify-center w-full"}
+      className={`${
+        disabled ? "bg-gray-200" : "bg-emerald-400"
+      } flex-row items-center rounded-2xl justify-center w-full`}
     >
       <Pressable
-        className={"bg-emerald-400 rounded-xl justify-center items-center w-full"}
+        className={`${
+          disabled ? "bg-gray-200" : "bg-emerald-400"
+        } rounded-xl justify-center items-center w-full`}
         style={{ height: 56 }}
         onPress={onPress}
-        disabled={isLoading}
+        disabled={disabled}
       >
         {isLoading ? (
-          <ActivityIndicator size="large" color={'white'} />
+          <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
           <Text
             style={{ fontSize: 24 }}
-            className="font-bold text-white"
+            className={`font-bold ${
+              disabled ? "text-emerald-400" : "text-white"
+            }`}
           >
             {title}
           </Text>

@@ -13,6 +13,7 @@ const Input: React.FC<InputProps> = ({
   onChangeText,
   placeholder,
   editable,
+  ...props
 }) => {
   return (
     <View
@@ -20,7 +21,18 @@ const Input: React.FC<InputProps> = ({
       className="flex-row gap-4 px-4 bg-neutral-100 items-center rounded-2xl"
     >
       <Ionicons name="person-outline" size={24} color={Colors.primary} />
-      <TextInput editable={editable} selectTextOnFocus={editable} onChangeText={onChangeText} style={{ fontSize: 16 }} className="flex-1 font-semibold text-neutral-700" placeholder={placeholder} placeholderTextColor={'gray'} />
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        editable={editable}
+        selectTextOnFocus={editable}
+        onChangeText={onChangeText}
+        style={{ fontSize: 16 }}
+        className="flex-1 font-semibold text-neutral-700"
+        placeholder={placeholder}
+        placeholderTextColor={"gray"}
+        {...props}
+      />
     </View>
   );
 };
