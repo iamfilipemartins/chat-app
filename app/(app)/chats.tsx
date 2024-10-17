@@ -12,9 +12,12 @@ import { useRouter } from "expo-router";
 const Chats: React.FC = () => {
   const { handleSignOut, user } = useAuthContext();
   const [contacts, setContacts] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [signOutLoading, setSignOutLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const getContacts = async (userId: string) => {
+    setLoading(true);
     const queryContacts: any = query(users, where("userId", "!=", userId));
     const getContactsFromDoc: any = await getDocs(queryContacts);
     let data: any = [];
@@ -24,7 +27,14 @@ const Chats: React.FC = () => {
     });
 
     setContacts(data);
+    setLoading(false);
   };
+
+  const signOut = async () => {
+    setSignOutLoading(true);
+    await handleSignOut();
+    setSignOutLoading(false)
+  }
 
   useEffect(() => {
     if (user?.userId) getContacts(user?.userId);
@@ -43,6 +53,15 @@ const Chats: React.FC = () => {
     />
   );
 
+  if (loading) {
+    return (
+      <View className="flex-1 bg-slate-50">
+        <StatusBar style="light" />
+        <Loading />
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1 bg-slate-50">
       <StatusBar style="light" />
@@ -53,13 +72,15 @@ const Chats: React.FC = () => {
             renderItem={renderItem}
             keyExtractor={(item) => item.userId}
           />
-          <View className="p-4">
-            <Button title={"Sign Out"} onPress={handleSignOut} />
-          </View>
         </View>
       ) : (
-        <Loading />
+        <View className="flex-1 items-center justify-center">
+          <Text>No chats available for the moment</Text>
+        </View>
       )}
+      <View className="p-4">
+        <Button isLoading={signOutLoading} disabled={signOutLoading} title={"Sign Out"} onPress={signOut} />
+      </View>
     </View>
   );
 };
