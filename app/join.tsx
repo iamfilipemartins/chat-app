@@ -75,7 +75,7 @@ const Join: React.FC = () => {
           <View className="flex-1 items-center justify-start gap-4">
             <Input
               editable={!loading}
-              placeholder="E-mail"
+              placeholder="Create or add your email"
               onChangeText={handleChangeEmail}
               keyboardType="email-address"
               leftIconName="mail-outline"
@@ -84,7 +84,7 @@ const Join: React.FC = () => {
             />
             <Input
               editable={!loading}
-              placeholder="Password"
+              placeholder="Create or add your password"
               onChangeText={handleChangePassword}
               leftIconName="key-outline"
               secureTextEntry={hidePassword}
