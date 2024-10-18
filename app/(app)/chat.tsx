@@ -55,12 +55,9 @@ const Chat: React.FC = () => {
   const renderItem = ({ item, index }: { item: any; index: number }) => (
     <Message
       last={index === messages?.length - 1}
-      description={item?.message}
       date={new Date(item?.createdAt?.seconds * 1000)}
       side={item?.fromId === user?.userId ? "right" : "left"}
-      onPress={() => {
-        router.back();
-      }}
+      item={item}
     />
   );
 

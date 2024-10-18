@@ -14,15 +14,13 @@ import {
 } from "firebase/auth";
 import { auth, db, users } from "@/firebaseConfig";
 import {
-  collection,
   doc,
   getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
   setDoc,
   Timestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -35,6 +33,7 @@ interface AuthProps {
   createChat: (userId: string) => void;
   sendMessage: (userId: string, message: string) => void;
   getUserContacts: () => void;
+  setLikeMessage: (messageId: string, likedBy: string[]) => void;
 }
 
 const AuthContext = createContext<AuthProps>({
@@ -45,6 +44,7 @@ const AuthContext = createContext<AuthProps>({
   createChat: () => null,
   sendMessage: () => null,
   getUserContacts: () => [],
+  setLikeMessage: () => null,
 });
 
 export const useAuthContext = (): AuthProps => {
@@ -68,6 +68,34 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       const userDataFromDb = userFromDb.data();
       setUser({ ...user, ...userDataFromDb });
       setLogged(true);
+    }
+  };
+
+  const setLikeMessage = async (messageId: string, likedBy: string[]) => {
+    try {
+      console.log('setLikeMessage a')
+      const auth = getAuth();
+      const user = auth.currentUser;
+      let likedByUpdated = likedBy?.length ? [...likedBy] : [];
+
+      if (user?.uid) {
+        if (!likedByUpdated.includes(user?.uid)) {
+          likedByUpdated.push(user?.uid);
+        } else {
+          const index = likedByUpdated.indexOf(user?.uid);
+          if (index > -1) {
+            likedByUpdated.splice(index, 1);
+          }
+        }
+
+        await updateDoc(doc(db, "messages", messageId), {
+          liked: !!likedByUpdated?.length,
+          likedBy: likedByUpdated,
+        });
+      }
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, msg: error.message };
     }
   };
 
@@ -101,6 +129,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         fromId: user?.uid,
         toId: userId,
         message: message?.trim(),
+        liked: false,
+        likedBy: [],
         createdAt: Timestamp.fromDate(new Date()),
       });
 
@@ -117,8 +147,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       const user = auth.currentUser;
       const queryContacts: any = query(users, where("userId", "!=", user?.uid));
       const getContactsFromDoc: any = await getDocs(queryContacts);
-      
-  
+
       getContactsFromDoc.forEach((contact: any) => {
         let contactData = { ...contact.data() };
         data.push({ ...contactData });
@@ -193,6 +222,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         createChat,
         sendMessage,
         getUserContacts,
+        setLikeMessage,
       }}
     >
       {children}
