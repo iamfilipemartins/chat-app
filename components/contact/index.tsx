@@ -33,7 +33,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -43,7 +43,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
       if (message?.createdAt?.seconds) {
         setLastMessageDate(
-          moment(new Date(message?.createdAt?.seconds * 1000)).calendar()
+          moment(new Date(message?.createdAt?.seconds * 1000)).calendar(),
         );
       } else {
         setLastMessageDate(undefined);
@@ -85,7 +85,9 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
           <Text className="text-base font-medium mb-2">{contact?.email}</Text>
         )}
         {!!lastMessage && (
-          <Text className="text-sm font-regular">{lastMessage?.message || 'Start a new chat with me!'}</Text>
+          <Text className="text-sm font-regular">
+            {lastMessage?.message || "Start a new chat with me!"}
+          </Text>
         )}
       </View>
 

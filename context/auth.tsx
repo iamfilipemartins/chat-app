@@ -73,7 +73,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   const setLikeMessage = async (messageId: string, likedBy: string[]) => {
     try {
-      console.log('setLikeMessage a')
       const auth = getAuth();
       const user = auth.currentUser;
       let likedByUpdated = likedBy?.length ? [...likedBy] : [];
@@ -164,7 +163,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       await setDoc(doc(db, "users", response?.user?.uid), {

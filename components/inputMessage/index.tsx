@@ -61,7 +61,12 @@ const InputMessage: React.FC<InputProps> = ({
           className={`rounded-full items-center justify-center`}
           onPress={sendIconClick}
         >
-          <Ionicons className={`py-2 pr-2 pl-2.5 rounded-full items-center justify-center bg-emerald-400`} name={sendIconName} size={20} color={sendIconColor} />
+          <Ionicons
+            className={`py-2 pr-2 pl-2.5 rounded-full items-center justify-center bg-emerald-400`}
+            name={sendIconName}
+            size={20}
+            color={sendIconColor}
+          />
         </Pressable>
       )}
     </View>

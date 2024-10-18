@@ -28,19 +28,17 @@ const Input: React.FC<InputProps> = ({
   rightIconName,
   rightIconColor = "gray",
   rightIconClick = () => {},
-  backgroundColor = 'bg-neutral-100',
-  borderColor = 'border-neutral-300',
+  backgroundColor = "bg-neutral-100",
+  borderColor = "border-neutral-300",
   ...props
 }) => {
   return (
-    <View className={`flex-row gap-4 px-4 ${backgroundColor} items-center rounded-2xl h-14 border ${borderColor}`}>
-      {leftIconName  && (
+    <View
+      className={`flex-row gap-4 px-4 ${backgroundColor} items-center rounded-2xl h-14 border ${borderColor}`}
+    >
+      {leftIconName && (
         <Pressable onPress={leftIconClick}>
-          <Ionicons
-            name={leftIconName}
-            size={24}
-            color={leftIconColor}
-          />
+          <Ionicons name={leftIconName} size={24} color={leftIconColor} />
         </Pressable>
       )}
 

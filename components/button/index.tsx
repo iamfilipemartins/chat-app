@@ -29,7 +29,9 @@ const Button: React.FC<ButtonProps> = ({
     >
       <Pressable
         className={`${
-          disabled ? "bg-gray-200 border border-gray-400" : "bg-emerald-400 border border-emerald-500"
+          disabled
+            ? "bg-gray-200 border border-gray-400"
+            : "bg-emerald-400 border border-emerald-500"
         } rounded-xl justify-center items-center w-full h-14`}
         onPress={onPress}
         disabled={disabled}

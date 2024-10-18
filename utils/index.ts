@@ -6,7 +6,7 @@ export const isValidEmail = (email?: string): boolean => {
 export const getChatId = (userIdFrom?: any, userIdTo?: any) =>
   `chat-${[userIdFrom, userIdTo].sort().join("-")}`;
 
-export const isDoubleTap = (lastTapTimeRef: any) =>{
+export const isDoubleTap = (lastTapTimeRef: any) => {
   const now = new Date().getTime();
   const DOUBLE_TAP_DELAY = 500;
 
