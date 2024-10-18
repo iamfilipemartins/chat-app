@@ -94,10 +94,10 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
       >
         <View className="justify-between items-start">
           {contact?.email && (
-            <Text className="text-base font-medium mb-2">{contact?.email}</Text>
+            <Text style={{ fontFamily: 'Inter_500Medium' }} className="text-base mb-2">{contact?.email}</Text>
           )}
           {!!lastMessage && (
-            <Text className="text-sm font-regular">
+            <Text style={{ fontFamily: 'Inter_400Regular' }} className="text-sm">
               {lastMessage?.message || "Start a new chat with me!"}
             </Text>
           )}
@@ -105,7 +105,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
         <View className="flex-row justify-between items-center">
           {lastMessageDate && (
-            <Text className="text-sm font-regular mr-4">{lastMessageDate}</Text>
+            <Text style={{ fontFamily: 'Inter_300Light' }} className="text-sm mr-4">{lastMessageDate}</Text>
           )}
 
           <Ionicons name={iconName} size={16} color={iconColor} />

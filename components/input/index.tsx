@@ -43,12 +43,13 @@ const Input: React.FC<InputProps> = ({
       )}
 
       <TextInput
+        style={{ fontFamily: "Inter_400Regular" }}
         autoCapitalize="none"
         autoCorrect={false}
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        className="flex-1 font-regular text-neutral-500 text-base"
+        className="flex-1 text-neutral-500 text-base"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}

@@ -40,7 +40,8 @@ const Button: React.FC<ButtonProps> = ({
           <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
           <Text
-            className={`font-bold ${
+            style={{ fontFamily: 'Inter_600SemiBold' }} 
+            className={`${
               disabled ? "text-gray-500" : "text-white"
             } text-xl`}
           >

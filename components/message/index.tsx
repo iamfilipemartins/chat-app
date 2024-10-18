@@ -50,8 +50,8 @@ const Message: React.FC<Props> = ({ item, date }) => {
         className={messageContainerClassname}
         onPress={item?.fromId !== user.userId ? handleTap : undefined}
       >
-        <Text className="text-base max-w-96 min-w-12">{item?.message}</Text>
-        <Text className="text-base max-w-96 text-xs self-end">
+        <Text style={{ fontFamily: 'Inter_400Regular' }} className="text-base max-w-96 min-w-12">{item?.message}</Text>
+        <Text style={{ fontFamily: 'Inter_300Light' }} className="text-base max-w-96 text-xs self-end">
           {moment(date).format("HH:mm")}
         </Text>
         {!!item?.liked && (

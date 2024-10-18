@@ -63,7 +63,7 @@ const Chats: React.FC = () => {
         </View>
       ) : (
         <View className="flex-1 items-center justify-center">
-          <Text>No chats available for the moment</Text>
+          <Text style={{ fontFamily: 'Inter_400Regular' }}>No chats available for the moment</Text>
         </View>
       )}
       <View className="p-4">
