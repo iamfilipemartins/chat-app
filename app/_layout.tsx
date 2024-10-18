@@ -14,14 +14,14 @@ const Layout = () => {
   useEffect(() => {
     const insideChatFlow = segments[0] === "(app)";
 
-    if(typeof logged === undefined) {
+    if (typeof logged === undefined) {
       return;
     }
 
     if (!logged) {
       router.replace("join");
     }
-    
+
     if (logged && !insideChatFlow) {
       router.replace("chats");
     }

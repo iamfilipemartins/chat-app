@@ -37,18 +37,18 @@ const Join: React.FC = () => {
       try {
         const response: any = await handleSignIn(
           emailRef.current,
-          passwordRef?.current
+          passwordRef?.current,
         );
         if (!response?.success) {
           Alert.alert(
             "Something went wrong!",
-            "This email is already in use. Check your params and try again later."
+            "This email is already in use. Check your params and try again later.",
           );
         }
       } catch (e: any) {
         Alert.alert(
           "Something went wrong!",
-          "We have some issues with your attempt to join our chat. Try again later."
+          "We have some issues with your attempt to join our chat. Try again later.",
         );
       }
     }

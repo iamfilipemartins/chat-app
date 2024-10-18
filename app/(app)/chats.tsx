@@ -24,8 +24,8 @@ const Chats: React.FC = () => {
   const signOut = async () => {
     setSignOutLoading(true);
     await handleSignOut();
-    setSignOutLoading(false)
-  }
+    setSignOutLoading(false);
+  };
 
   useEffect(() => {
     getContacts();
@@ -67,7 +67,12 @@ const Chats: React.FC = () => {
         </View>
       )}
       <View className="p-4">
-        <Button isLoading={signOutLoading} disabled={signOutLoading} title={"Sign Out"} onPress={signOut} />
+        <Button
+          isLoading={signOutLoading}
+          disabled={signOutLoading}
+          title={"Sign Out"}
+          onPress={signOut}
+        />
       </View>
     </View>
   );

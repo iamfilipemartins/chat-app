@@ -14,7 +14,7 @@ export default function _layout() {
       <Stack.Screen
         name={"chat"}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
     </Stack>
