@@ -6,10 +6,11 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import Header from "@/components/header";
 import { useAuthContext } from "@/context/auth";
 import Message from "@/components/message";
@@ -27,7 +28,6 @@ import { db } from "@/firebaseConfig";
 const Chat: React.FC = () => {
   const { user, createChat, sendMessage } = useAuthContext();
   const userChat = useLocalSearchParams();
-  const router = useRouter();
   const [messages, setMessages] = useState<any>([]);
   const [disabled, setDisabled] = useState<boolean>(true);
   const chatMessageRef = useRef<any>(null);
@@ -43,7 +43,7 @@ const Chat: React.FC = () => {
     if (chatMessageRef.current) {
       const response: any = await sendMessage(
         userChat?.userId.toString(),
-        chatMessageRef.current
+        chatMessageRef.current,
       );
       if (response?.success) {
         chatMessageRef.current = null;
@@ -69,7 +69,7 @@ const Chat: React.FC = () => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -90,7 +90,7 @@ const Chat: React.FC = () => {
           <Header userToChat={userChat?.email} />
           <StatusBar style="light" />
           <View className="flex-1">
-            {!!messages?.length && (
+            {!!messages?.length ? (
               <View>
                 <FlatList
                   ref={flatlistRef}
@@ -98,6 +98,14 @@ const Chat: React.FC = () => {
                   data={messages}
                   renderItem={renderItem}
                   keyExtractor={(item) => item?.messageId}
+                />
+              </View>
+            ) : (
+              <View className="flex-1 items-center justify-center">
+                <Image
+                  style={{ height: 160 }}
+                  resizeMode="contain"
+                  source={require("../../assets/images/logo.png")}
                 />
               </View>
             )}
