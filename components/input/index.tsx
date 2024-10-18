@@ -28,7 +28,7 @@ const Input: React.FC<InputProps> = ({
   rightIconName,
   rightIconColor = "gray",
   rightIconClick = () => {},
-  backgroundColor = 'bg-neutral-200',
+  backgroundColor = 'bg-neutral-100',
   borderColor = 'border-neutral-300',
   ...props
 }) => {
@@ -50,8 +50,7 @@ const Input: React.FC<InputProps> = ({
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        style={{ fontSize: 16, fontWeight: 'regular' }}
-        className="flex-1 font-semibold text-neutral-700"
+        className="flex-1 font-regular text-neutral-500 text-base"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}

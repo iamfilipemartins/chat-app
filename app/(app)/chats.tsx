@@ -1,32 +1,23 @@
-import { View, Text, Pressable, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/auth";
 import { StatusBar } from "expo-status-bar";
 import Contact from "@/components/contact";
 import Loading from "@/components/loading";
-import { getDocs, query, where } from "firebase/firestore";
-import { users } from "@/firebaseConfig";
 import Button from "@/components/button";
 import { useRouter } from "expo-router";
 
 const Chats: React.FC = () => {
-  const { handleSignOut, user } = useAuthContext();
+  const { handleSignOut, getUserContacts } = useAuthContext();
   const [contacts, setContacts] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [signOutLoading, setSignOutLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const getContacts = async (userId: string) => {
+  const getContacts = async () => {
     setLoading(true);
-    const queryContacts: any = query(users, where("userId", "!=", userId));
-    const getContactsFromDoc: any = await getDocs(queryContacts);
-    let data: any = [];
-
-    getContactsFromDoc.forEach((contact: any) => {
-      data.push(contact.data());
-    });
-
-    setContacts(data);
+    const response: any = await getUserContacts();
+    setContacts(response?.data);
     setLoading(false);
   };
 
@@ -37,16 +28,13 @@ const Chats: React.FC = () => {
   }
 
   useEffect(() => {
-    if (user?.userId) getContacts(user?.userId);
+    getContacts();
   }, []);
 
   const renderItem = ({ item, index }: { item: any; index: number }) => (
     <Contact
-      title={item?.email}
-      description={item?.email || "Start a new chat"}
-      rightText={item?.email}
-      rightIconName="chevron-forward-outline"
-      lastContact={index === contacts?.length - 1}
+      contact={item}
+      firstContact={index === 0}
       onPress={() => {
         router.push({ pathname: "/chat", params: item });
       }}
