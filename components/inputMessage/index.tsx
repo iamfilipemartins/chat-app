@@ -43,13 +43,14 @@ const InputMessage: React.FC<InputProps> = ({
       className={`flex-row px-4 ${backgroundColor} items-center rounded-full h-14 border ${borderColor}`}
     >
       <TextInput
+        style={{ fontFamily: "Inter_400Regular" }}
         ref={innerRef}
         autoCapitalize="none"
         autoCorrect={false}
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        className="flex-1 font-regular text-neutral-700 text-base"
+        className="flex-1 text-neutral-700"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}

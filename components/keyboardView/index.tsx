@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React, { PropsWithChildren } from "react";
 
-const ios = Platform.OS == "ios";
+const ios = Platform.OS === "ios";
 
 const KeyboardView: React.FC<PropsWithChildren> = ({ children }) => {
   return (

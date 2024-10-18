@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Alert, Image } from "react-native";
+import { View, SafeAreaView, Alert, Image } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import Input from "@/components/input";
@@ -42,10 +42,10 @@ const Join: React.FC = () => {
         if (!response?.success) {
           Alert.alert(
             "Something went wrong!",
-            "This email is already in use. Check your params and try again later.",
+            "Check your params and try again later.",
           );
         }
-      } catch (e: any) {
+      } catch (_e) {
         Alert.alert(
           "Something went wrong!",
           "We have some issues with your attempt to join our chat. Try again later.",
@@ -99,7 +99,7 @@ const Join: React.FC = () => {
               isLoading={loading}
               title="Join"
               onPress={handlePressJoin}
-              disabled={disabled || loading}
+              disabled={disabled}
             />
           </View>
         </View>

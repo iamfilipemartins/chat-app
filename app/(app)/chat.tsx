@@ -1,12 +1,12 @@
 import {
   View,
-  Text,
   FlatList,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -24,6 +24,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import Loading from "@/components/loading";
 
 const Chat: React.FC = () => {
   const { user, createChat, sendMessage } = useAuthContext();
@@ -33,6 +34,7 @@ const Chat: React.FC = () => {
   const chatMessageRef = useRef<any>(null);
   const inputRef = useRef<any>(null);
   const flatlistRef = useRef<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleChangeMessage = (value: string | undefined) => {
     setDisabled(!value?.length);
@@ -54,12 +56,14 @@ const Chat: React.FC = () => {
 
   const renderItem = ({ item, index }: { item: any; index: number }) => (
     <Message
+      first={index === 0}
       date={new Date(item?.createdAt?.seconds * 1000)}
       item={item}
     />
   );
 
   useEffect(() => {
+    setLoading(true);
     createChat(userChat?.userId.toString());
 
     const chatId = getChatId(user?.userId, userChat?.userId.toString());
@@ -73,6 +77,7 @@ const Chat: React.FC = () => {
     let unsub = onSnapshot(q, (snap) => {
       let messages = snap.docs.map((item: any) => item.data());
       setMessages([...messages]);
+      setLoading(false);
     });
 
     return unsub;
@@ -80,34 +85,41 @@ const Chat: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View className="flex-1 bg-slate-50">
+      <SafeAreaView className="flex-1 bg-slate-50">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
           <Header userToChat={userChat?.email} />
           <StatusBar style="light" />
-          <View className="flex-1">
-            {!!messages?.length ? (
-              <View>
-                <FlatList
-                  ref={flatlistRef}
-                  inverted
-                  data={messages}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item?.messageId}
-                />
-              </View>
-            ) : (
-              <View className="flex-1 items-center justify-center">
-                <Image
-                  style={{ height: 160 }}
-                  resizeMode="contain"
-                  source={require("../../assets/images/logo.png")}
-                />
-              </View>
-            )}
-          </View>
+          {loading ? (
+            <Loading />
+          ) : (
+            <View className="flex-1">
+              {!!messages?.length ? (
+                <View>
+                  <FlatList
+                    ref={flatlistRef}
+                    inverted
+                    data={messages}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item?.messageId}
+                    nestedScrollEnabled
+                    contentContainerStyle={{ flexGrow: 1 }}
+                  />
+                </View>
+              ) : (
+                <View className="flex-1 items-center justify-center">
+                  <Image
+                    style={{ height: 160 }}
+                    resizeMode="contain"
+                    source={require("../../assets/images/logo.png")}
+                  />
+                </View>
+              )}
+            </View>
+          )}
+
           <View className="p-2">
             <InputMessage
               innerRef={inputRef}
@@ -118,7 +130,7 @@ const Chat: React.FC = () => {
             />
           </View>
         </KeyboardAvoidingView>
-      </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };

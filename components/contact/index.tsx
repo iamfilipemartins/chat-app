@@ -18,10 +18,10 @@ import lodash from "lodash";
 interface Props {
   contact: any;
   onPress?: () => void;
-  firstContact: boolean;
+  last: boolean;
 }
 
-const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
+const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
   const [lastMessage, setLastMessage] = useState<any>(undefined);
   const [lastMessageDate, setLastMessageDate] = useState<any>(undefined);
   const { user } = useAuthContext();
@@ -32,7 +32,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -42,7 +42,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
       if (message?.createdAt?.seconds) {
         setLastMessageDate(
-          moment(new Date(message?.createdAt?.seconds * 1000)).calendar()
+          moment(new Date(message?.createdAt?.seconds * 1000)).calendar(),
         );
       } else {
         setLastMessageDate(undefined);
@@ -63,8 +63,13 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
       : "border-emerald-300"
     : "border-neutral-300";
 
-  const marginItem = firstContact ? "mt-4 mx-4 mb-2" : "my-2 mx-4";
-  const containerClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} ${marginItem}`;
+  let containerClassname = "pt-4 px-4";
+
+  if (last) {
+    containerClassname = containerClassname.concat(" pb-4");
+  }
+
+  const contactClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} flex-row justify-between items-center p-4`;
 
   const iconColor = hasLastMessage
     ? lastMessageFromContact
@@ -87,17 +92,22 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
   });
 
   return (
-    <View className={containerClassname}>
-      <Pressable
-        className="flex-row justify-between items-center p-4"
-        onPress={onPressDebounced}
-      >
+    <Pressable className={containerClassname}>
+      <Pressable className={contactClassname} onPress={onPressDebounced}>
         <View className="justify-between items-start">
           {contact?.email && (
-            <Text className="text-base font-medium mb-2">{contact?.email}</Text>
+            <Text
+              style={{ fontFamily: "Inter_500Medium" }}
+              className="text-m text-black mb-2"
+            >
+              {contact?.email}
+            </Text>
           )}
           {!!lastMessage && (
-            <Text className="text-sm font-regular">
+            <Text
+              style={{ fontFamily: "Inter_400Regular" }}
+              className="text-sm text-gray-600"
+            >
               {lastMessage?.message || "Start a new chat with me!"}
             </Text>
           )}
@@ -105,13 +115,18 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
         <View className="flex-row justify-between items-center">
           {lastMessageDate && (
-            <Text className="text-sm font-regular mr-4">{lastMessageDate}</Text>
+            <Text
+              style={{ fontFamily: "Inter_300Light" }}
+              className="text-sm text-gray-600 mr-4"
+            >
+              {lastMessageDate}
+            </Text>
           )}
 
           <Ionicons name={iconName} size={16} color={iconColor} />
         </View>
       </Pressable>
-    </View>
+    </Pressable>
   );
 };
 

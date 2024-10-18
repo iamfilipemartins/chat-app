@@ -1,6 +1,7 @@
 import { View, TextInputProps, TextInput, Pressable } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 
 interface InputProps extends TextInputProps {
   onChangeText: (value?: string) => void;
@@ -20,13 +21,13 @@ interface InputProps extends TextInputProps {
 const Input: React.FC<InputProps> = ({
   onChangeText,
   placeholder,
-  placeholderTextColor = "gray",
+  placeholderTextColor = Colors.gray400,
   editable,
   leftIconName,
-  leftIconColor = "gray",
+  leftIconColor = Colors.gray600,
   leftIconClick = () => {},
   rightIconName,
-  rightIconColor = "gray",
+  rightIconColor = Colors.gray600,
   rightIconClick = () => {},
   backgroundColor = "bg-neutral-100",
   borderColor = "border-neutral-300",
@@ -43,12 +44,13 @@ const Input: React.FC<InputProps> = ({
       )}
 
       <TextInput
+        style={{ fontFamily: "Inter_400Regular" }}
         autoCapitalize="none"
         autoCorrect={false}
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        className="flex-1 font-regular text-neutral-500 text-base"
+        className="flex-1 text-gray-600"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}
