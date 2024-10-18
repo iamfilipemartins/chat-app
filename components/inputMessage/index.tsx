@@ -50,7 +50,7 @@ const InputMessage: React.FC<InputProps> = ({
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        className="flex-1 text-neutral-700 text-base"
+        className="flex-1 text-neutral-700"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}

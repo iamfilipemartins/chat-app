@@ -32,7 +32,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -42,7 +42,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
 
       if (message?.createdAt?.seconds) {
         setLastMessageDate(
-          moment(new Date(message?.createdAt?.seconds * 1000)).calendar()
+          moment(new Date(message?.createdAt?.seconds * 1000)).calendar(),
         );
       } else {
         setLastMessageDate(undefined);
@@ -65,10 +65,10 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
 
   let containerClassname = "pt-4 px-4";
 
-  if(last){
-    containerClassname = containerClassname.concat(' pb-4');
+  if (last) {
+    containerClassname = containerClassname.concat(" pb-4");
   }
-  
+
   const contactClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} flex-row justify-between items-center p-4`;
 
   const iconColor = hasLastMessage
@@ -93,16 +93,21 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
 
   return (
     <Pressable className={containerClassname}>
-      <Pressable
-        className={contactClassname}
-        onPress={onPressDebounced}
-      >
+      <Pressable className={contactClassname} onPress={onPressDebounced}>
         <View className="justify-between items-start">
           {contact?.email && (
-            <Text style={{ fontFamily: 'Inter_500Medium' }} className="text-base mb-2">{contact?.email}</Text>
+            <Text
+              style={{ fontFamily: "Inter_500Medium" }}
+              className="text-m text-black mb-2"
+            >
+              {contact?.email}
+            </Text>
           )}
           {!!lastMessage && (
-            <Text style={{ fontFamily: 'Inter_400Regular' }} className="text-sm">
+            <Text
+              style={{ fontFamily: "Inter_400Regular" }}
+              className="text-sm text-gray-600"
+            >
               {lastMessage?.message || "Start a new chat with me!"}
             </Text>
           )}
@@ -110,7 +115,12 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
 
         <View className="flex-row justify-between items-center">
           {lastMessageDate && (
-            <Text style={{ fontFamily: 'Inter_300Light' }} className="text-sm mr-4">{lastMessageDate}</Text>
+            <Text
+              style={{ fontFamily: "Inter_300Light" }}
+              className="text-sm text-gray-600 mr-4"
+            >
+              {lastMessageDate}
+            </Text>
           )}
 
           <Ionicons name={iconName} size={16} color={iconColor} />
