@@ -63,8 +63,8 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
       : "border-emerald-300"
     : "border-neutral-300";
 
-  const marginItem = firstContact ? "mt-4 mx-4 mb-2" : "my-2 mx-4";
-  const containerClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} ${marginItem}`;
+  const containerClassname = "pt-4 px-4";
+  const contactClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} flex-row justify-between items-center p-4`;
 
   const iconColor = hasLastMessage
     ? lastMessageFromContact
@@ -87,9 +87,9 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
   });
 
   return (
-    <View className={containerClassname}>
+    <Pressable className={containerClassname}>
       <Pressable
-        className="flex-row justify-between items-center p-4"
+        className={contactClassname}
         onPress={onPressDebounced}
       >
         <View className="justify-between items-start">
@@ -111,7 +111,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
           <Ionicons name={iconName} size={16} color={iconColor} />
         </View>
       </Pressable>
-    </View>
+    </Pressable>
   );
 };
 

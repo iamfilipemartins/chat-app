@@ -26,8 +26,8 @@ const Message: React.FC<Props> = ({ item, date }) => {
 
   const containerClassname =
     item?.toId === user?.userId
-      ? "z-30 flex-row justify-start items-center my-2 px-4 min-h-8"
-      : "z-30 flex-row justify-end items-center my-2 px-4 min-h-8";
+      ? "z-30 flex-row justify-start items-center py-2 px-4 min-h-8"
+      : "z-30 flex-row justify-end items-center py-2 px-4 min-h-8";
 
   const messageContainerClassname =
     item?.toId === user?.userId
@@ -45,7 +45,7 @@ const Message: React.FC<Props> = ({ item, date }) => {
       : `absolute z-0 -bottom-1 -right-3 rounded-full items-center justify-center border-l-[6px] border-emerald-200 w-4 h-4`;
 
   return (
-    <View className={containerClassname}>
+    <Pressable className={containerClassname}>
       <Pressable
         className={messageContainerClassname}
         onPress={item?.fromId !== user.userId ? handleTap : undefined}
@@ -61,7 +61,7 @@ const Message: React.FC<Props> = ({ item, date }) => {
         )}
          <View className={bubbleClassName} style={{transform: [{ rotate: item?.toId === user?.userId ? '45deg' : '-45deg'}]}} />
       </Pressable>
-    </View>
+    </Pressable>
   );
 };
 

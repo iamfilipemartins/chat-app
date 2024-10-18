@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, SafeAreaView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/auth";
 import { StatusBar } from "expo-status-bar";
@@ -51,7 +51,7 @@ const Chats: React.FC = () => {
   }
 
   return (
-    <View className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar style="light" />
       {contacts?.length ? (
         <View className="flex-1">
@@ -59,11 +59,15 @@ const Chats: React.FC = () => {
             data={contacts}
             renderItem={renderItem}
             keyExtractor={(item) => item.userId}
+            nestedScrollEnabled
+            contentContainerStyle={{ flexGrow: 1 }}
           />
         </View>
       ) : (
         <View className="flex-1 items-center justify-center">
-          <Text style={{ fontFamily: 'Inter_400Regular' }}>No chats available for the moment</Text>
+          <Text style={{ fontFamily: "Inter_400Regular" }}>
+            No chats available for the moment
+          </Text>
         </View>
       )}
       <View className="p-4">
@@ -74,7 +78,7 @@ const Chats: React.FC = () => {
           onPress={signOut}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

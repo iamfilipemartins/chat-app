@@ -1,12 +1,12 @@
 import {
   View,
-  Text,
   FlatList,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -81,7 +81,7 @@ const Chat: React.FC = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View className="flex-1 bg-slate-50">
+      <SafeAreaView className="flex-1 bg-slate-50">
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
@@ -100,6 +100,8 @@ const Chat: React.FC = () => {
                     data={messages}
                     renderItem={renderItem}
                     keyExtractor={(item) => item?.messageId}
+                    nestedScrollEnabled
+                    contentContainerStyle={{ flexGrow: 1 }}
                   />
                 </View>
               ) : (
@@ -124,7 +126,7 @@ const Chat: React.FC = () => {
             />
           </View>
         </KeyboardAvoidingView>
-      </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
