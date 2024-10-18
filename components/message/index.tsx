@@ -18,30 +18,40 @@ const Message: React.FC<Props> = ({ item, side, last = false, date }) => {
   const lastTapTimeRef = useRef<any>(null);
 
   const handleTap = async () => {
-    if (isDoubleTap(lastTapTimeRef) && item?.fromId !== user.userId) {
+    if (isDoubleTap(lastTapTimeRef)) {
       await setLikeMessage(item?.messageId, item?.likedBy);
+      lastTapTimeRef.current = null;
+    } else {
+      lastTapTimeRef.current = new Date().getTime();
     }
-
-    lastTapTimeRef.current = new Date().getTime();
   };
 
-  const baseColor = side === "left" ? 'neutral' : 'emerald';
-  const justifyContent = side === "left" ? 'start' : 'end';
+  const baseColor = side === "left" ? "neutral" : "emerald";
+  const justifyContent = side === "left" ? "start" : "end";
 
-  const containerClassname = `flex-row justify-${justifyContent} items-center mb-4 px-4 ${last && "mt-2"}`;
+  const containerClassname = `flex-row justify-${justifyContent} items-center mb-4 px-4 ${
+    last && "mt-2"
+  } min-h-8`;
   const messageContainerClassname = `relative min-w-8 max-w-96 items-center p-2 rounded-xl bg-${baseColor}-100 border border-${baseColor}-200`;
-  const likeClassName = `absolute z-50 -bottom-3 -${side}-3 rounded-full items-center justify-center bg-${baseColor}-200 p-0.5`;
+  const likeClassName = `absolute z-50 -bottom-2 -${
+    side === "left" ? "right" : "left"
+  }-3 rounded-full items-center justify-center bg-${baseColor}-200 p-0.5`;
 
   return (
     <View className={containerClassname}>
-      <Pressable className={messageContainerClassname} onPress={handleTap}>
-        <Text className="text-base max-w-96 min-w-8">{item?.message}</Text>
+      <Pressable
+        className={messageContainerClassname}
+        onPress={item?.fromId !== user.userId ? handleTap : undefined}
+      >
+        <Text className="text-base max-w-96 min-w-12">{item?.message}</Text>
         <Text className="text-base max-w-96 text-xs self-end">
           {moment(date).format("HH:mm")}
         </Text>
-        {!!item?.liked && <View className={likeClassName} >
-          <Ionicons name={'heart'} size={16} color={'red'} />
-          </View>}
+        {!!item?.liked && (
+          <View className={likeClassName}>
+            <Ionicons name={"heart"} size={12} color={"red"} />
+          </View>
+        )}
       </Pressable>
     </View>
   );
