@@ -24,6 +24,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import Loading from "@/components/loading";
 
 const Chat: React.FC = () => {
   const { user, createChat, sendMessage } = useAuthContext();
@@ -33,6 +34,7 @@ const Chat: React.FC = () => {
   const chatMessageRef = useRef<any>(null);
   const inputRef = useRef<any>(null);
   const flatlistRef = useRef<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleChangeMessage = (value: string | undefined) => {
     setDisabled(!value?.length);
@@ -43,7 +45,7 @@ const Chat: React.FC = () => {
     if (chatMessageRef.current) {
       const response: any = await sendMessage(
         userChat?.userId.toString(),
-        chatMessageRef.current,
+        chatMessageRef.current
       );
       if (response?.success) {
         chatMessageRef.current = null;
@@ -53,13 +55,11 @@ const Chat: React.FC = () => {
   };
 
   const renderItem = ({ item, index }: { item: any; index: number }) => (
-    <Message
-      date={new Date(item?.createdAt?.seconds * 1000)}
-      item={item}
-    />
+    <Message date={new Date(item?.createdAt?.seconds * 1000)} item={item} />
   );
 
   useEffect(() => {
+    setLoading(true);
     createChat(userChat?.userId.toString());
 
     const chatId = getChatId(user?.userId, userChat?.userId.toString());
@@ -67,12 +67,13 @@ const Chat: React.FC = () => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc"),
+      orderBy("chatId", "desc")
     );
 
     let unsub = onSnapshot(q, (snap) => {
       let messages = snap.docs.map((item: any) => item.data());
       setMessages([...messages]);
+      setLoading(false);
     });
 
     return unsub;
@@ -87,27 +88,32 @@ const Chat: React.FC = () => {
         >
           <Header userToChat={userChat?.email} />
           <StatusBar style="light" />
-          <View className="flex-1">
-            {!!messages?.length ? (
-              <View>
-                <FlatList
-                  ref={flatlistRef}
-                  inverted
-                  data={messages}
-                  renderItem={renderItem}
-                  keyExtractor={(item) => item?.messageId}
-                />
-              </View>
-            ) : (
-              <View className="flex-1 items-center justify-center">
-                <Image
-                  style={{ height: 160 }}
-                  resizeMode="contain"
-                  source={require("../../assets/images/logo.png")}
-                />
-              </View>
-            )}
-          </View>
+          {loading ? (
+            <Loading />
+          ) : (
+            <View className="flex-1">
+              {!!messages?.length ? (
+                <View>
+                  <FlatList
+                    ref={flatlistRef}
+                    inverted
+                    data={messages}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item?.messageId}
+                  />
+                </View>
+              ) : (
+                <View className="flex-1 items-center justify-center">
+                  <Image
+                    style={{ height: 160 }}
+                    resizeMode="contain"
+                    source={require("../../assets/images/logo.png")}
+                  />
+                </View>
+              )}
+            </View>
+          )}
+
           <View className="p-2">
             <InputMessage
               innerRef={inputRef}
