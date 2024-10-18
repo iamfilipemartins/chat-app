@@ -32,12 +32,9 @@ const Header: React.FC<Props> = ({
               />
             </Pressable>
           )}
-            <Text
-              style={{ fontSize: 16, textTransform: "capitalize" }}
-              className="font-regular text-white"
-            >
-              {userToChat}
-            </Text>
+          <Text className="font-regular text-white text-base">
+            {userToChat}
+          </Text>
         </View>
       </View>
     );
@@ -53,8 +50,8 @@ const Header: React.FC<Props> = ({
         )}
         {showPathname && (
           <Text
-            style={{ fontSize: 24, textTransform: "capitalize" }}
-            className="font-regular text-white"
+            style={{ textTransform: "capitalize" }}
+            className="text-2xl font-regular text-white"
           >
             {pathname.replace("/", "")}
           </Text>
@@ -62,9 +59,7 @@ const Header: React.FC<Props> = ({
       </View>
 
       {showUserEmail && (
-        <Text style={{ fontSize: 16 }} className="font-regular text-white">
-          {user?.email}
-        </Text>
+        <Text className="text-base font-regular text-white">{user?.email}</Text>
       )}
     </View>
   );

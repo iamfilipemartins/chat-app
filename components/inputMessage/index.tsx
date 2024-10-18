@@ -16,6 +16,8 @@ interface InputProps extends TextInputProps {
   backgroundColor?: string;
   borderColor?: string;
   sendDisabled?: boolean;
+  innerRef?: any;
+  sendPressColor?: string;
 }
 
 const InputMessage: React.FC<InputProps> = ({
@@ -29,39 +31,37 @@ const InputMessage: React.FC<InputProps> = ({
   sendIconName = "send-outline",
   sendIconColor = "white",
   sendIconClick = () => {},
-  backgroundColor = 'bg-white',
+  backgroundColor = "bg-white",
   sendDisabled,
-  borderColor = `border-${sendDisabled ? 'gray' : 'emerald'}-400`,
+  borderColor = `border-emerald-400`,
+  sendPressColor = `bg-emerald-400`,
+  innerRef,
   ...props
 }) => {
   return (
-    <View className={`flex-row gap-4 px-4 ${backgroundColor} items-center rounded-2xl h-14 border ${borderColor}`}>
-      {leftIconName  && (
-        <Pressable onPress={leftIconClick}>
-          <Ionicons
-            name={leftIconName}
-            size={24}
-            color={leftIconColor}
-          />
-        </Pressable>
-      )}
-
+    <View
+      className={`flex-row px-4 ${backgroundColor} items-center rounded-full h-14 border ${borderColor}`}
+    >
       <TextInput
+        ref={innerRef}
         autoCapitalize="none"
         autoCorrect={false}
         editable={editable}
         selectTextOnFocus={editable}
         onChangeText={onChangeText}
-        style={{ fontSize: 16, fontWeight: 'regular' }}
-        className="flex-1 font-semibold text-neutral-700"
+        className="flex-1 font-regular text-neutral-700 text-base"
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         {...props}
       />
 
       {sendIconName && (
-        <Pressable disabled={sendDisabled} className={`bg-${sendDisabled ? 'gray' : 'emerald'}-400 p-2 rounded-full`} onPress={sendIconClick}>
-          <Ionicons name={sendIconName} size={20} color={sendIconColor} />
+        <Pressable
+          disabled={sendDisabled}
+          className={`rounded-full items-center justify-center`}
+          onPress={sendIconClick}
+        >
+          <Ionicons className={`py-2 pr-2 pl-2.5 rounded-full items-center justify-center bg-emerald-400`} name={sendIconName} size={20} color={sendIconColor} />
         </Pressable>
       )}
     </View>
