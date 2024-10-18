@@ -57,13 +57,13 @@ const Message: React.FC<Props> = ({ item, date, first }) => {
       >
         <Text
           style={{ fontFamily: "Inter_400Regular" }}
-          className="text-base max-w-96 min-w-12"
+          className="text-gray-800 max-w-96 min-w-12"
         >
           {item?.message}
         </Text>
         <Text
           style={{ fontFamily: "Inter_300Light" }}
-          className="text-base max-w-96 text-xs self-end"
+          className="text-gray-600 max-w-96 text-xs self-end"
         >
           {moment(date).format("HH:mm")}
         </Text>
