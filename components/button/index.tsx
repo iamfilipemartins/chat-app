@@ -1,6 +1,6 @@
 import { View, Text, ActivityIndicator, Pressable } from "react-native";
 import React from "react";
-import { Colors } from "@/constants/Colors";
+import lodash from "lodash";
 
 interface ButtonProps {
   title?: string;
@@ -21,6 +21,15 @@ const Button: React.FC<ButtonProps> = ({
   isLoading,
   disabled,
 }) => {
+  const handleOnPress = () => {
+    !isLoading && onPress && onPress();
+  };
+
+  const onPressDebounced = lodash.debounce(handleOnPress, 1000, {
+    leading: true,
+    trailing: false,
+  });
+
   return (
     <View
       className={`${
@@ -33,17 +42,15 @@ const Button: React.FC<ButtonProps> = ({
             ? "bg-gray-200 border border-gray-400"
             : "bg-emerald-400 border border-emerald-500"
         } rounded-xl justify-center items-center w-full h-14`}
-        onPress={onPress}
+        onPress={onPressDebounced}
         disabled={disabled}
       >
         {isLoading ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
+          <ActivityIndicator size="large" color={"white"} />
         ) : (
           <Text
-            style={{ fontFamily: 'Inter_600SemiBold' }} 
-            className={`${
-              disabled ? "text-gray-500" : "text-white"
-            } text-xl`}
+            style={{ fontFamily: "Inter_600SemiBold" }}
+            className={`${disabled ? "text-gray-600" : "text-white"} text-xl`}
           >
             {title}
           </Text>
