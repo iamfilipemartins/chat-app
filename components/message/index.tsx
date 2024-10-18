@@ -36,13 +36,13 @@ const Message: React.FC<Props> = ({ item, date, first }) => {
 
   const messageContainerClassname =
     item?.toId === user?.userId
-      ? `z-30 relative min-w-8 max-w-96 items-center py-1 px-2 rounded-xl bg-neutral-200 border border-neutral-200`
-      : `z-30 relative min-w-8 max-w-96 items-center py-1 px-2 rounded-xl bg-emerald-200 border border-emerald-200`;
+      ? `z-30 relative min-w-8 max-w-96 items-center py-1 px-2 rounded-xl bg-neutral-200`
+      : `z-30 relative min-w-8 max-w-96 items-center py-1 px-2 rounded-xl bg-emerald-200`;
 
   const likeClassName =
     item?.toId === user?.userId
-      ? `absolute z-50 -bottom-1.5 -right-3 rounded-full items-center justify-center bg-neutral-200 p-0.5`
-      : `absolute z-50 -bottom-1.5 -left-3 rounded-full items-center justify-center bg-emerald-200 p-0.5`;
+      ? `absolute z-50 -bottom-1.5 -right-3 rounded-full items-center justify-center bg-neutral-200 p-0.5 border border-neutral-300`
+      : `absolute z-50 -bottom-1.5 -left-3 rounded-full items-center justify-center bg-emerald-200 p-0.5 border border-emerald-300`;
 
   const bubbleClassName =
     item?.toId === user?.userId
