@@ -18,10 +18,10 @@ import lodash from "lodash";
 interface Props {
   contact: any;
   onPress?: () => void;
-  firstContact: boolean;
+  last: boolean;
 }
 
-const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
+const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
   const [lastMessage, setLastMessage] = useState<any>(undefined);
   const [lastMessageDate, setLastMessageDate] = useState<any>(undefined);
   const { user } = useAuthContext();
@@ -63,7 +63,12 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
       : "border-emerald-300"
     : "border-neutral-300";
 
-  const containerClassname = "pt-4 px-4";
+  let containerClassname = "pt-4 px-4";
+
+  if(last){
+    containerClassname = containerClassname.concat(' pb-4');
+  }
+  
   const contactClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} flex-row justify-between items-center p-4`;
 
   const iconColor = hasLastMessage

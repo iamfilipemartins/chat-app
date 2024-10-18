@@ -1,5 +1,5 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import React, { useState } from "react";
 import { usePathname, useRouter } from "expo-router";
 import { useAuthContext } from "@/context/auth";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,9 +15,16 @@ const Header: React.FC<Props> = ({
   showUserEmail = true,
   userToChat,
 }) => {
-  const { user } = useAuthContext();
+  const { handleSignOut, user } = useAuthContext();
   const pathname = usePathname();
   const router = useRouter();
+  const [signOutLoading, setSignOutLoading] = useState<boolean>(false);
+
+  const signOut = async () => {
+    setSignOutLoading(true);
+    await handleSignOut();
+    setSignOutLoading(false);
+  };
 
   if (userToChat) {
     return (
@@ -51,26 +58,29 @@ const Header: React.FC<Props> = ({
             <Ionicons name={"chevron-back-outline"} size={24} color={"white"} />
           </Pressable>
         )}
-        {showPathname && (
-          <Text
-            style={{
-              textTransform: "capitalize",
-              fontFamily: "Inter_600SemiBold",
-            }}
-            className="text-2xl text-white"
-          >
-            {pathname.replace("/", "")}
-          </Text>
-        )}
       </View>
 
       {showUserEmail && (
         <Text
           style={{ fontFamily: "Inter_400Regular" }}
-          className="text-base text-white"
+          className="text-base text-white self-center"
         >
           {user?.email}
         </Text>
+      )}
+
+      {signOutLoading && (
+        <ActivityIndicator size={"small"} color={"white"} />
+      )}
+
+      {!signOutLoading && (
+        <Pressable
+          disabled={signOutLoading}
+          className="self-end"
+          onPress={signOut}
+        >
+          <Ionicons name={"log-out-outline"} size={24} color={"white"} />
+        </Pressable>
       )}
     </View>
   );

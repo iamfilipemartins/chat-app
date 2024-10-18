@@ -55,7 +55,11 @@ const Chat: React.FC = () => {
   };
 
   const renderItem = ({ item, index }: { item: any; index: number }) => (
-    <Message date={new Date(item?.createdAt?.seconds * 1000)} item={item} />
+    <Message
+      first={index === 0}
+      date={new Date(item?.createdAt?.seconds * 1000)}
+      item={item}
+    />
   );
 
   useEffect(() => {
