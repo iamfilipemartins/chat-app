@@ -3,12 +3,18 @@
 import "../global.css";
 
 import { Slot, useRouter, useSegments } from "expo-router";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 
 import { useEffect } from "react";
 import { AuthContextProvider, useAuthContext } from "@/context/auth";
-import { Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_900Black } from "@expo-google-fonts/inter";
+import {
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 
 const Layout = () => {
   const { logged } = useAuthContext();
@@ -20,7 +26,7 @@ const Layout = () => {
     Inter_400Regular,
     Inter_500Medium,
     Inter_600SemiBold,
-    Inter_700Bold
+    Inter_700Bold,
   });
 
   useEffect(() => {

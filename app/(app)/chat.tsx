@@ -45,7 +45,7 @@ const Chat: React.FC = () => {
     if (chatMessageRef.current) {
       const response: any = await sendMessage(
         userChat?.userId.toString(),
-        chatMessageRef.current
+        chatMessageRef.current,
       );
       if (response?.success) {
         chatMessageRef.current = null;
@@ -71,7 +71,7 @@ const Chat: React.FC = () => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {
