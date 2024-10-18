@@ -34,6 +34,7 @@ interface AuthProps {
   sendMessage: (userId: string, message: string) => void;
   getUserContacts: () => void;
   setLikeMessage: (messageId: string, likedBy: string[]) => void;
+  sendImage: (userId: string, base64: string) => void;
 }
 
 const AuthContext = createContext<AuthProps>({
@@ -45,6 +46,7 @@ const AuthContext = createContext<AuthProps>({
   sendMessage: () => null,
   getUserContacts: () => [],
   setLikeMessage: () => null,
+  sendImage: () => null,
 });
 
 export const useAuthContext = (): AuthProps => {
@@ -115,7 +117,32 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const sendMessage = async (userId: string, message: string) => {
+  const sendImage = async (userId: string, base64: string) => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      const chatId = getChatId(user?.uid, userId);
+      const messageId = [chatId, Date.now()].join("-");
+
+      await setDoc(doc(db, "messages", messageId), {
+        messageId,
+        chatId,
+        fromId: user?.uid,
+        toId: userId,
+        message: null,
+        liked: false,
+        likedBy: [],
+        image: base64,
+        createdAt: Timestamp.fromDate(new Date()),
+      });
+
+      return { success: true };
+    } catch (error: any) {
+      return { success: false, msg: error.message };
+    }
+  };
+
+  const sendMessage = async (userId: string, message: string, imageBase64?: boolean) => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
@@ -130,6 +157,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         message: message?.trim(),
         liked: false,
         likedBy: [],
+        image: null,
         createdAt: Timestamp.fromDate(new Date()),
       });
 
@@ -222,6 +250,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         sendMessage,
         getUserContacts,
         setLikeMessage,
+        sendImage,
       }}
     >
       {children}

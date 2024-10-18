@@ -7,6 +7,7 @@ import {
   Keyboard,
   Image,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { StatusBar } from "expo-status-bar";
@@ -25,9 +26,10 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import Loading from "@/components/loading";
+import * as ImagePicker from "expo-image-picker";
 
 const Chat: React.FC = () => {
-  const { user, createChat, sendMessage } = useAuthContext();
+  const { user, createChat, sendMessage, sendImage } = useAuthContext();
   const userChat = useLocalSearchParams();
   const [messages, setMessages] = useState<any>([]);
   const [disabled, setDisabled] = useState<boolean>(true);
@@ -35,6 +37,67 @@ const Chat: React.FC = () => {
   const inputRef = useRef<any>(null);
   const flatlistRef = useRef<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [statusCamera, requestPermissionCamera] =
+    ImagePicker.useCameraPermissions();
+  const [statusLibrary, requestPermissionLibrary] =
+    ImagePicker.useMediaLibraryPermissions();
+
+  const handleSendImageLibrary = async () => {
+    try {
+      if (!statusLibrary?.granted) {
+        const permissionResult = await requestPermissionLibrary();
+        if (permissionResult.granted === false) {
+          Alert.alert(
+            "Sorry",
+            "You need allow the use of your photos to use it."
+          );
+          return;
+        }
+      }
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+        base64: true,
+      });
+
+      if (!result.canceled && result?.assets[0]?.base64) {
+        await sendImage(userChat?.userId.toString(), result?.assets[0]?.base64);
+      }
+    } catch (_e) {
+      Alert.alert(
+        "Sorry!",
+        "Something wrong happen during the upload of your photo. Try again later."
+      );
+    }
+  };
+
+  const handleSendImageCamera = async () => {
+    try {
+      if (!statusCamera?.granted) {
+        const permissionResult = await requestPermissionCamera();
+        if (permissionResult.granted === false) {
+          Alert.alert(
+            "Sorry",
+            "You need allow the use of your camera to use it."
+          );
+          return;
+        }
+      }
+
+      const result = await ImagePicker.launchCameraAsync();
+      if (!result.canceled && result?.assets[0]?.base64) {
+        await sendImage(userChat?.userId.toString(), result?.assets[0]?.base64);
+      }
+    } catch (_e) {
+      Alert.alert(
+        "Sorry!",
+        "Something wrong happen during the upload of your photo. Try again later."
+      );
+    }
+  };
 
   const handleChangeMessage = (value: string | undefined) => {
     setDisabled(!value?.length);
@@ -45,7 +108,7 @@ const Chat: React.FC = () => {
     if (chatMessageRef.current) {
       const response: any = await sendMessage(
         userChat?.userId.toString(),
-        chatMessageRef.current,
+        chatMessageRef.current
       );
       if (response?.success) {
         chatMessageRef.current = null;
@@ -71,7 +134,7 @@ const Chat: React.FC = () => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc"),
+      orderBy("chatId", "desc")
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -123,10 +186,11 @@ const Chat: React.FC = () => {
           <View className="p-2">
             <InputMessage
               innerRef={inputRef}
-              sendIconColor="white"
               sendDisabled={disabled}
               onChangeText={handleChangeMessage}
-              sendIconClick={handleSendMessage}
+              onPressPhotos={handleSendImageLibrary}
+              onPressCamera={handleSendImageCamera}
+              onPressSend={handleSendMessage}
             />
           </View>
         </KeyboardAvoidingView>

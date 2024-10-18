@@ -16,6 +16,8 @@ import {
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
 
+SplashScreen.preventAutoHideAsync();
+
 const Layout = () => {
   const { logged } = useAuthContext();
   const segments = useSegments();

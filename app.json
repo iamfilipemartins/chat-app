@@ -33,6 +33,14 @@
         {
           "fonts": ["node_modules/@expo-google-fonts/inter/Inter_900Black.ttf"]
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "The app accesses your camera to let you share photos with your friends.",
+          "photosPermission": "The app accesses your photos to let you share them with your friends.",
+          "microphonePermission": "The app accesses your voice to let you talk them with your friends."
+        }
       ]
     ],
     "experiments": {
