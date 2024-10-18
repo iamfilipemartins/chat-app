@@ -58,16 +58,14 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
   const hasLastMessage = !!lastMessage?.message;
 
-  const bgColor = "bg-neutral-50";
-
   const borderColor = hasLastMessage
     ? lastMessageFromContact
-      ? "border-orange-200"
-      : "border-emerald-200"
-    : "border-neutral-200";
+      ? "border-orange-300"
+      : "border-emerald-300"
+    : "border-neutral-300";
 
   const marginItem = firstContact ? "mt-4 mx-4 mb-2" : "my-2 mx-4";
-  const containerClassname = `h-24 rounded-2xl ${bgColor} border ${borderColor} ${marginItem}`;
+  const containerClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} ${marginItem}`;
 
   const iconColor = hasLastMessage
     ? lastMessageFromContact
@@ -86,8 +84,8 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
         {contact?.email && (
           <Text className="text-base font-medium mb-2">{contact?.email}</Text>
         )}
-        {lastMessage?.message && (
-          <Text className="text-sm font-regular">{lastMessage?.message}</Text>
+        {!!lastMessage && (
+          <Text className="text-sm font-regular">{lastMessage?.message || 'Start a new chat with me!'}</Text>
         )}
       </View>
 
