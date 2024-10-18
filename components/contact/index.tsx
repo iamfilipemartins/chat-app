@@ -7,14 +7,13 @@ import moment from "moment";
 import { getChatId } from "@/utils";
 import {
   collection,
-  doc,
-  limit,
   onSnapshot,
   orderBy,
   query,
   where,
 } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
+import lodash from "lodash";
 
 interface Props {
   contact: any;
@@ -33,7 +32,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc"),
+      orderBy("chatId", "desc")
     );
 
     let unsub = onSnapshot(q, (snap) => {
@@ -43,7 +42,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
 
       if (message?.createdAt?.seconds) {
         setLastMessageDate(
-          moment(new Date(message?.createdAt?.seconds * 1000)).calendar(),
+          moment(new Date(message?.createdAt?.seconds * 1000)).calendar()
         );
       } else {
         setLastMessageDate(undefined);
@@ -78,41 +77,40 @@ const Contact: React.FC<Props> = ({ contact, onPress, firstContact }) => {
       ? "checkmark-done-outline"
       : "chevron-forward-outline";
 
-  const content = (
-    <>
-      <View className="justify-between items-start">
-        {contact?.email && (
-          <Text className="text-base font-medium mb-2">{contact?.email}</Text>
-        )}
-        {!!lastMessage && (
-          <Text className="text-sm font-regular">
-            {lastMessage?.message || "Start a new chat with me!"}
-          </Text>
-        )}
-      </View>
+  const handleOnPress = () => {
+    onPress && onPress();
+  };
 
-      <View className="flex-row justify-between items-center">
-        {lastMessageDate && (
-          <Text className="text-sm font-regular mr-4">{lastMessageDate}</Text>
-        )}
-
-        <Ionicons name={iconName} size={16} color={iconColor} />
-      </View>
-    </>
-  );
+  const onPressDebounced = lodash.debounce(handleOnPress, 1000, {
+    leading: true,
+    trailing: false,
+  });
 
   return (
     <View className={containerClassname}>
-      {onPress && (
-        <Pressable
-          className="flex-row justify-between items-center p-4"
-          onPress={onPress}
-        >
-          {content}
-        </Pressable>
-      )}
+      <Pressable
+        className="flex-row justify-between items-center p-4"
+        onPress={onPressDebounced}
+      >
+        <View className="justify-between items-start">
+          {contact?.email && (
+            <Text className="text-base font-medium mb-2">{contact?.email}</Text>
+          )}
+          {!!lastMessage && (
+            <Text className="text-sm font-regular">
+              {lastMessage?.message || "Start a new chat with me!"}
+            </Text>
+          )}
+        </View>
 
-      {!onPress && <>{content}</>}
+        <View className="flex-row justify-between items-center">
+          {lastMessageDate && (
+            <Text className="text-sm font-regular mr-4">{lastMessageDate}</Text>
+          )}
+
+          <Ionicons name={iconName} size={16} color={iconColor} />
+        </View>
+      </Pressable>
     </View>
   );
 };

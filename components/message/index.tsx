@@ -7,12 +7,10 @@ import { isDoubleTap } from "@/utils";
 
 interface Props {
   item: any;
-  side: "left" | "right";
-  last?: boolean;
   date: any;
 }
 
-const Message: React.FC<Props> = ({ item, side, last = false, date }) => {
+const Message: React.FC<Props> = ({ item, date }) => {
   const { setLikeMessage, user } = useAuthContext();
 
   const lastTapTimeRef = useRef<any>(null);
@@ -26,16 +24,20 @@ const Message: React.FC<Props> = ({ item, side, last = false, date }) => {
     }
   };
 
-  const baseColor = side === "left" ? "neutral" : "emerald";
-  const justifyContent = side === "left" ? "start" : "end";
+  const containerClassname =
+    item?.toId === user?.userId
+      ? "flex-row justify-start items-center my-2 px-4 min-h-8"
+      : "flex-row justify-end items-center my-2 px-4 min-h-8";
 
-  const containerClassname = `flex-row justify-${justifyContent} items-center mb-4 px-4 ${
-    last && "mt-2"
-  } min-h-8`;
-  const messageContainerClassname = `relative min-w-8 max-w-96 items-center p-2 rounded-xl bg-${baseColor}-100 border border-${baseColor}-200`;
-  const likeClassName = `absolute z-50 -bottom-2 -${
-    side === "left" ? "right" : "left"
-  }-3 rounded-full items-center justify-center bg-${baseColor}-200 p-0.5`;
+  const messageContainerClassname =
+    item?.toId === user?.userId
+      ? `relative min-w-8 max-w-96 items-center p-2 rounded-xl bg-neutral-100 border border-neutral-200`
+      : `relative min-w-8 max-w-96 items-center p-2 rounded-xl bg-emerald-100 border border-emerald-200`;
+
+  const likeClassName =
+    item?.toId === user?.userId
+      ? `absolute z-50 -bottom-2 -right-3 rounded-full items-center justify-center bg-neutral-200 p-0.5`
+      : `absolute z-50 -bottom-2 -left-3 rounded-full items-center justify-center bg-emerald-200 p-0.5`;
 
   return (
     <View className={containerClassname}>
