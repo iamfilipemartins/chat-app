@@ -16,18 +16,19 @@ import { db } from "@/firebaseConfig";
 import lodash from "lodash";
 
 interface Props {
-  contact: any;
+  chat: any;
   onPress?: () => void;
   last: boolean;
+  chatUser: any;
 }
 
-const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
+const ChatItem: React.FC<Props> = ({ chat, chatUser, onPress, last }) => {
   const [lastMessage, setLastMessage] = useState<any>(undefined);
   const [lastMessageDate, setLastMessageDate] = useState<any>(undefined);
   const { user } = useAuthContext();
 
   useEffect(() => {
-    const chatId = getChatId(user?.userId, contact?.userId);
+    const chatId = getChatId(user?.userId, chatUser?.userId);
 
     const q = query(
       collection(db, "messages"),
@@ -53,15 +54,15 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
   }, []);
 
   const lastMessageFromContact =
-    !!lastMessage?.fromId && lastMessage?.fromId !== user?.userId;
+    !!lastMessage?.fromId && lastMessage?.fromId === chatUser?.userId;
 
-  const hasLastMessage = !!lastMessage?.message;
+  const hasLastMessage = !!lastMessage?.message || !!lastMessage?.image;
 
-  const borderColor = hasLastMessage
+  const borderColor = !!hasLastMessage
     ? lastMessageFromContact
-      ? "border-orange-300"
-      : "border-emerald-300"
-    : "border-neutral-300";
+      ? " border border-orange-300"
+      : " border border-emerald-300"
+    : " border border-neutral-300";
 
   let containerClassname = "pt-4 px-4";
 
@@ -69,7 +70,7 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
     containerClassname = containerClassname.concat(" pb-4");
   }
 
-  const contactClassname = `h-24 rounded-2xl bg-neutral-100 border ${borderColor} flex-row justify-between items-center p-4`;
+  let contactClassname = `h-24 rounded-2xl bg-neutral-100 flex-row justify-between items-center p-4 ${borderColor}`;
 
   const iconColor = hasLastMessage
     ? lastMessageFromContact
@@ -95,21 +96,39 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
     <Pressable className={containerClassname}>
       <Pressable className={contactClassname} onPress={onPressDebounced}>
         <View className="justify-between items-start">
-          {contact?.email && (
+          {chatUser?.email && (
             <Text
               style={{ fontFamily: "Inter_500Medium" }}
               className="text-m text-black mb-2"
             >
-              {contact?.email}
+              {chatUser?.email}
             </Text>
           )}
-          {!!lastMessage && (
+
+          {!!lastMessage && !lastMessage?.image && (
             <Text
               style={{ fontFamily: "Inter_400Regular" }}
               className="text-sm text-gray-600"
             >
               {lastMessage?.message || "Start a new chat with me!"}
             </Text>
+          )}
+
+          {!!lastMessage && lastMessage?.image && (
+            <View className="flex-row justify-between items-center">
+              <Ionicons
+                className={`rounded-full items-center justify-center mr-2`}
+                name={"image-outline"}
+                size={20}
+                color={Colors.gray600}
+              />
+              <Text
+                style={{ fontFamily: "Inter_400Regular" }}
+                className="text-sm text-gray-600"
+              >
+                Photo
+              </Text>
+            </View>
           )}
         </View>
 
@@ -130,4 +149,4 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
   );
 };
 
-export default Contact;
+export default ChatItem;

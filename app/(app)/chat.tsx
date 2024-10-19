@@ -50,7 +50,7 @@ const Chat: React.FC = () => {
         if (permissionResult.granted === false) {
           Alert.alert(
             "Sorry",
-            "You need allow the use of your photos to use it."
+            "You need allow the use of your photos to use it.",
           );
           return;
         }
@@ -64,12 +64,22 @@ const Chat: React.FC = () => {
       });
 
       if (!result.canceled && result?.assets[0]?.base64) {
-        await sendImage(userChat?.userId.toString(), result?.assets[0]?.base64);
+        const response: any = await sendImage(
+          userChat?.userId.toString(),
+          result?.assets[0]?.base64,
+        );
+
+        if (!response.success) {
+          Alert.alert(
+            "Sorry!",
+            "Something wrong happen during the upload of your photo. Try again later.",
+          );
+        }
       }
     } catch (_e) {
       Alert.alert(
         "Sorry!",
-        "Something wrong happen during the upload of your photo. Try again later."
+        "Something wrong happen during the upload of your photo. Try again later.",
       );
     }
   };
@@ -81,20 +91,36 @@ const Chat: React.FC = () => {
         if (permissionResult.granted === false) {
           Alert.alert(
             "Sorry",
-            "You need allow the use of your camera to use it."
+            "You need allow the use of your camera to use it.",
           );
           return;
         }
       }
 
-      const result = await ImagePicker.launchCameraAsync();
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+        base64: true,
+      });
+
       if (!result.canceled && result?.assets[0]?.base64) {
-        await sendImage(userChat?.userId.toString(), result?.assets[0]?.base64);
+        const response: any = await sendImage(
+          userChat?.userId.toString(),
+          result?.assets[0]?.base64,
+        );
+
+        if (!response.success) {
+          Alert.alert(
+            "Sorry!",
+            "Something wrong happen during the upload of your photo. Try again later.",
+          );
+        }
       }
     } catch (_e) {
       Alert.alert(
         "Sorry!",
-        "Something wrong happen during the upload of your photo. Try again later."
+        "Something wrong happen during the upload of your photo. Try again later.",
       );
     }
   };
@@ -108,12 +134,17 @@ const Chat: React.FC = () => {
     if (chatMessageRef.current) {
       const response: any = await sendMessage(
         userChat?.userId.toString(),
-        chatMessageRef.current
+        chatMessageRef.current,
       );
       if (response?.success) {
         chatMessageRef.current = null;
+        if (inputRef?.current) inputRef.current.clear();
+      } else {
+        Alert.alert(
+          "Sorry!",
+          "Something wrong happen during the upload of your message. Try again later.",
+        );
       }
-      if (inputRef?.current) inputRef.current.clear();
     }
   };
 
@@ -127,14 +158,14 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    createChat(userChat?.userId.toString());
+    createChat(userChat);
 
     const chatId = getChatId(user?.userId, userChat?.userId.toString());
 
     const q = query(
       collection(db, "messages"),
       where("chatId", "==", chatId),
-      orderBy("chatId", "desc")
+      orderBy("chatId", "desc"),
     );
 
     let unsub = onSnapshot(q, (snap) => {

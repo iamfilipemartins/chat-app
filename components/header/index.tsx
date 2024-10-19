@@ -6,11 +6,18 @@ import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   showPathname?: boolean;
+  showContacts?: boolean;
+  showChats?: boolean;
   showUserEmail?: boolean;
   userToChat?: any;
 }
 
-const Header: React.FC<Props> = ({ showUserEmail = true, userToChat }) => {
+const Header: React.FC<Props> = ({
+  showUserEmail = true,
+  userToChat,
+  showContacts = false,
+  showChats = false,
+}) => {
   const { handleSignOut, user } = useAuthContext();
   const router = useRouter();
   const [signOutLoading, setSignOutLoading] = useState<boolean>(false);
@@ -51,6 +58,21 @@ const Header: React.FC<Props> = ({ showUserEmail = true, userToChat }) => {
         {router.canGoBack() && (
           <Pressable className="mr-4 " onPress={() => router.back()}>
             <Ionicons name={"chevron-back-outline"} size={24} color={"white"} />
+          </Pressable>
+        )}
+
+        {showContacts && (
+          <Pressable
+            className="mr-4 "
+            onPress={() => router.replace("contacts")}
+          >
+            <Ionicons name={"people-outline"} size={24} color={"white"} />
+          </Pressable>
+        )}
+
+        {showChats && (
+          <Pressable className="mr-4 " onPress={() => router.replace("chats")}>
+            <Ionicons name={"chatbubbles-outline"} size={24} color={"white"} />
           </Pressable>
         )}
       </View>
