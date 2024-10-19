@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import React, { useRef } from "react";
 import moment from "moment";
 import { useAuthContext } from "@/context/auth";
@@ -55,12 +55,23 @@ const Message: React.FC<Props> = ({ item, date, first }) => {
         className={messageContainerClassname}
         onPress={item?.fromId !== user.userId ? handleTap : undefined}
       >
-        <Text
-          style={{ fontFamily: "Inter_400Regular" }}
-          className="text-gray-800 max-w-96 min-w-12"
-        >
-          {item?.message}
-        </Text>
+        {item?.image && (
+          <Image
+            className="w-60 h-60"
+            style={{ resizeMode: "contain" }}
+            source={{ uri: `data:image/jpeg;base64,${item?.image}` }}
+          />
+        )}
+
+        {item?.message && (
+          <Text
+            style={{ fontFamily: "Inter_400Regular" }}
+            className="text-gray-800 max-w-96 min-w-12"
+          >
+            {item?.message}
+          </Text>
+        )}
+
         <Text
           style={{ fontFamily: "Inter_300Light" }}
           className="text-gray-600 max-w-96 text-xs self-end"
