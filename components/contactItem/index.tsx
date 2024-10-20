@@ -28,12 +28,21 @@ const Contact: React.FC<Props> = ({ contact, onPress, last }) => {
         onPress={onPressDebounced}
       >
         <View className="justify-between items-start">
-          {contact?.email && (
+          {contact?.username && (
             <Text
               style={{ fontFamily: "Inter_500Medium" }}
               className="text-m text-black mb-2"
             >
-              {contact?.email}
+              {contact?.username}
+            </Text>
+          )}
+          
+          {contact?.email && (
+            <Text
+              style={{ fontFamily: "Inter_400Regular" }}
+              className="text-sm text-gray-600"
+            >
+              {contact?.email || "Start a new chat with me!"}
             </Text>
           )}
         </View>

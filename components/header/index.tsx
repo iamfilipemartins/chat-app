@@ -8,12 +8,12 @@ interface Props {
   showPathname?: boolean;
   showContacts?: boolean;
   showChats?: boolean;
-  showUserEmail?: boolean;
+  showUsername?: boolean;
   userToChat?: any;
 }
 
 const Header: React.FC<Props> = ({
-  showUserEmail = true,
+  showUsername = true,
   userToChat,
   showContacts = false,
   showChats = false,
@@ -32,15 +32,10 @@ const Header: React.FC<Props> = ({
     return (
       <View className="flex-row justify-between pt-16 pb-4 px-4 bg-emerald-400 items-center border-b border-b-emerald-500">
         <View className="flex-row justify-between items-center">
-          {router.canGoBack() && (
-            <Pressable className="mr-4 " onPress={() => router.back()}>
-              <Ionicons
-                name={"chevron-back-outline"}
-                size={24}
-                color={"white"}
-              />
-            </Pressable>
-          )}
+          <Pressable className="mr-4 " onPress={() => router.replace("chats")}>
+            <Ionicons name={"chevron-back-outline"} size={24} color={"white"} />
+          </Pressable>
+
           <Text
             style={{ fontFamily: "Inter_400Regular" }}
             className="text-white self-center"
@@ -55,12 +50,6 @@ const Header: React.FC<Props> = ({
   return (
     <View className="flex-row justify-between pt-12 pb-4 px-4 bg-emerald-400 items-center border-b border-b-emerald-500">
       <View className="flex-row justify-between items-center">
-        {router.canGoBack() && (
-          <Pressable className="mr-4 " onPress={() => router.back()}>
-            <Ionicons name={"chevron-back-outline"} size={24} color={"white"} />
-          </Pressable>
-        )}
-
         {showContacts && (
           <Pressable
             className="mr-4 "
@@ -77,12 +66,12 @@ const Header: React.FC<Props> = ({
         )}
       </View>
 
-      {showUserEmail && (
+      {showUsername && (
         <Text
           style={{ fontFamily: "Inter_400Regular" }}
           className="text-white self-center"
         >
-          {user?.email}
+          {user?.username}
         </Text>
       )}
 

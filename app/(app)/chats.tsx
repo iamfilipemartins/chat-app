@@ -1,4 +1,10 @@
-import { View, Text, FlatList, SafeAreaView, Image } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  Image,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/auth";
 import { StatusBar } from "expo-status-bar";
@@ -18,34 +24,32 @@ import ChatItem from "@/components/chatItem";
 
 const Chats: React.FC = () => {
   const [chats, setChats] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const { user } = useAuthContext();
 
   useEffect(() => {
     setLoading(true);
 
-    if (user?.userId) {
-      const q = query(
-        collection(db, "chats"),
-        and(
-          or(
-            where("userFromId", "==", user?.userId),
-            where("userToId", "==", user?.userId),
-          ),
-          where("lastMessageTime", "!=", null),
+    const q = query(
+      collection(db, "chats"),
+      and(
+        or(
+          where("userFromId", "==", user?.userId),
+          where("userToId", "==", user?.userId)
         ),
-        orderBy("lastMessageTime", "desc"),
-      );
+        where("lastMessageTime", "!=", null)
+      ),
+      orderBy("lastMessageTime", "desc")
+    );
 
-      let unsub = onSnapshot(q, (snap) => {
-        let chats = snap.docs.map((item: any) => item.data());
-        setChats(chats);
-        setLoading(false);
-      });
+    let unsub = onSnapshot(q, (snap) => {
+      let chats = snap.docs.map((item: any) => item.data());
+      setChats(chats);
+      setLoading(false);
+    });
 
-      return unsub;
-    }
+    return unsub;
   }, []);
 
   const renderItem = ({ item, index }: { item: any; index: number }) => {
@@ -87,20 +91,37 @@ const Chats: React.FC = () => {
           <FlatList
             data={chats}
             renderItem={renderItem}
-            keyExtractor={(item) => item.userId}
+            keyExtractor={(item) => item.chatId}
             nestedScrollEnabled
             contentContainerStyle={{ flexGrow: 1 }}
           />
         </View>
       ) : (
-        <View className="flex-1 items-center justify-center">
+        <View className="flex-1 items-center justify-center p-4">
           <Image
             style={{ height: 160 }}
             resizeMode="contain"
             source={require("../../assets/images/logo.png")}
           />
-          <Text style={{ fontFamily: "Inter_500Medium" }}>
-            No chats available for the moment.
+          <Text
+            className="text-center"
+            style={{ fontFamily: "Inter_500Medium" }}
+          >
+            You have no active chats.
+          </Text>
+          <Text
+            className="text-center"
+            style={{ fontFamily: "Inter_500Medium" }}
+          >
+            See your
+            <Text
+              onPress={() => router.replace("contacts")}
+              className="text-blue-500"
+              style={{ fontFamily: "Inter_500Medium" }}
+            >
+              {" contacts "}
+            </Text>
+            and start a new one!
           </Text>
         </View>
       )}

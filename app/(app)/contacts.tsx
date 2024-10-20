@@ -11,7 +11,7 @@ import { db } from "@/firebaseConfig";
 const Contacts: React.FC = () => {
   const { user } = useAuthContext();
   const [contacts, setContacts] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {

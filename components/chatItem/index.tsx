@@ -1,63 +1,23 @@
 import { Colors } from "@/constants/Colors";
-import { useAuthContext } from "@/context/auth";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Pressable, Text, View } from "react-native";
-import moment from "moment";
-import { getChatId } from "@/utils";
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
-import { db } from "@/firebaseConfig";
 import lodash from "lodash";
+import moment from "moment";
+import { useAuthContext } from "@/context/auth";
 
 interface Props {
-  chat: any;
+  chat?: any;
   onPress?: () => void;
   last: boolean;
   chatUser: any;
 }
 
-const ChatItem: React.FC<Props> = ({ chat, chatUser, onPress, last }) => {
-  const [lastMessage, setLastMessage] = useState<any>(undefined);
-  const [lastMessageDate, setLastMessageDate] = useState<any>(undefined);
+const ChatItem: React.FC<Props> = ({ chatUser, onPress, last, chat }) => {
   const { user } = useAuthContext();
 
-  useEffect(() => {
-    const chatId = getChatId(user?.userId, chatUser?.userId);
-
-    const q = query(
-      collection(db, "messages"),
-      where("chatId", "==", chatId),
-      orderBy("chatId", "desc"),
-    );
-
-    let unsub = onSnapshot(q, (snap) => {
-      let messages = snap.docs.map((item: any) => item.data());
-      const message = { ...messages[0] };
-      setLastMessage(message);
-
-      if (message?.createdAt?.seconds) {
-        setLastMessageDate(
-          moment(new Date(message?.createdAt?.seconds * 1000)).calendar(),
-        );
-      } else {
-        setLastMessageDate(undefined);
-      }
-    });
-
-    return unsub;
-  }, []);
-
-  const lastMessageFromContact =
-    !!lastMessage?.fromId && lastMessage?.fromId === chatUser?.userId;
-
-  const hasLastMessage = !!lastMessage?.message || !!lastMessage?.image;
-
+  const lastMessageFromContact = chat?.lastMessageUserId !== user?.userId;
+  const hasLastMessage = !!chat?.lastMessage;
   const borderColor = !!hasLastMessage
     ? lastMessageFromContact
       ? " border border-orange-300"
@@ -105,16 +65,16 @@ const ChatItem: React.FC<Props> = ({ chat, chatUser, onPress, last }) => {
             </Text>
           )}
 
-          {!!lastMessage && !lastMessage?.image && (
+          {chat?.isLastMessageText && (
             <Text
               style={{ fontFamily: "Inter_400Regular" }}
               className="text-sm text-gray-600"
             >
-              {lastMessage?.message || "Start a new chat with me!"}
+              {chat?.lastMessage || "Start a new chat with me!"}
             </Text>
           )}
 
-          {!!lastMessage && lastMessage?.image && (
+          {chat?.isLastMessageImage && (
             <View className="flex-row justify-between items-center">
               <Ionicons
                 className={`rounded-full items-center justify-center mr-2`}
@@ -133,12 +93,12 @@ const ChatItem: React.FC<Props> = ({ chat, chatUser, onPress, last }) => {
         </View>
 
         <View className="flex-row justify-between items-center">
-          {lastMessageDate && (
+          {chat?.lastMessageTime && (
             <Text
               style={{ fontFamily: "Inter_300Light" }}
               className="text-sm text-gray-600 mr-4"
             >
-              {lastMessageDate}
+              {moment(new Date(chat?.lastMessageTime * 1000)).calendar()}
             </Text>
           )}
 

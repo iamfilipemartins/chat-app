@@ -31,17 +31,13 @@ const Button: React.FC<ButtonProps> = ({
   });
 
   return (
-    <View
-      className={`${
-        disabled ? "bg-gray-200" : "bg-emerald-400"
-      } flex-row items-center rounded-2xl justify-center w-full h-14`}
-    >
+
       <Pressable
         className={`${
           disabled
             ? "bg-gray-200 border border-gray-400"
             : "bg-emerald-400 border border-emerald-500"
-        } rounded-xl justify-center items-center w-full h-14`}
+        } rounded-xl justify-center items-center h-14 flex-1`}
         onPress={onPressDebounced}
         disabled={disabled}
       >
@@ -56,7 +52,6 @@ const Button: React.FC<ButtonProps> = ({
           </Text>
         )}
       </Pressable>
-    </View>
   );
 };
 
