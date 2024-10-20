@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+# Welcome to Chat Me! 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+The app is running using Firebase so you can create new users. I already create two users for test: bot@chatme.com and ia@chatme.com. Both passwords are: 'chatme'. Enjoy!
 
 ## Get started
 
