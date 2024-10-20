@@ -41,29 +41,22 @@ const Join: React.FC = () => {
   const handlePressJoin = async () => {
     setLoading(true);
 
-    if (usernameRef?.current && emailRef?.current && passwordRef?.current) {
-      try {
-        const response: any = await handleSignIn(
-          emailRef.current,
-          passwordRef?.current,
-          usernameRef?.current
-        );
-        if (!response?.success) {
-          Alert.alert(
-            "Something went wrong!",
-            "Please check your params and try again."
-          );
-        }
-      } catch (_e) {
+    try {
+      const response: any = await handleSignIn(
+        emailRef.current,
+        passwordRef?.current,
+        usernameRef?.current
+      );
+      if (!response?.success) {
         Alert.alert(
           "Something went wrong!",
-          "We have some issues with your attempt to join our chat. Please try again."
+          "Please check your params and try again."
         );
       }
-    } else {
+    } catch (_e) {
       Alert.alert(
         "Something went wrong!",
-        "Please check your params and try again."
+        "We have some issues with your attempt to join our chat. Please try again."
       );
     }
 
