@@ -6,9 +6,15 @@ export default function _layout() {
   return (
     <Stack>
       <Stack.Screen
+        name={"contacts"}
+        options={{
+          header: () => <Header showChats />,
+        }}
+      />
+      <Stack.Screen
         name={"chats"}
         options={{
-          header: () => <Header />,
+          header: () => <Header showContacts />,
         }}
       />
       <Stack.Screen

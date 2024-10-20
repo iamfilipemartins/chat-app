@@ -12,27 +12,23 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth, db, users } from "@/firebaseConfig";
+import { auth, db } from "@/firebaseConfig";
 import {
   doc,
   getDoc,
-  getDocs,
-  query,
   setDoc,
   Timestamp,
   updateDoc,
-  where,
 } from "firebase/firestore";
 
 import { getChatId } from "@/utils";
 interface AuthProps {
-  handleSignIn: (email: string, password: string) => void;
+  handleSignIn: (email: string, password: string, username: string) => void;
   handleSignOut: () => void;
   user?: any;
   logged: boolean;
-  createChat: (userId: string) => void;
+  createChat: (contact: any) => void;
   sendMessage: (userId: string, message: string) => void;
-  getUserContacts: () => void;
   setLikeMessage: (messageId: string, likedBy: string[]) => void;
   sendImage: (userId: string, base64: string) => void;
 }
@@ -44,7 +40,6 @@ const AuthContext = createContext<AuthProps>({
   logged: false,
   createChat: () => null,
   sendMessage: () => null,
-  getUserContacts: () => [],
   setLikeMessage: () => null,
   sendImage: () => null,
 });
@@ -100,16 +95,29 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const createChat = async (userId: string) => {
+  const createChat = async (contact: any) => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
-      const chatId = getChatId(user?.uid, userId);
+      const chatId = getChatId(user?.uid, contact?.userId);
 
-      await setDoc(doc(db, "chats", chatId), {
-        chatId,
-        createdAt: Timestamp.fromDate(new Date()),
-      });
+      const chatIdDoc = await getDoc(doc(db, "chats", chatId));
+
+      if (!chatIdDoc.exists()) {
+        await setDoc(doc(db, "chats", chatId), {
+          chatId,
+          userFromEmail: user?.email,
+          userFromId: user?.uid,
+          userToEmail: contact?.email,
+          userToId: contact?.userId,
+          lastMessage: null,
+          lastMessageTime: null,
+          isLastMessageImage: false,
+          isLastMessageText: false,
+          lastMessageUserId: null,
+          createdAt: Timestamp.fromDate(new Date()),
+        });
+      }
 
       return { success: true };
     } catch (error: any) {
@@ -124,6 +132,16 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       const chatId = getChatId(user?.uid, userId);
       const messageId = [chatId, Date.now()].join("-");
 
+      const date = Timestamp.fromDate(new Date());
+
+      await updateDoc(doc(db, "chats", chatId), {
+        lastMessageTime: date?.seconds,
+        lastMessage: base64,
+        lastMessageUserId: user?.uid,
+        isLastMessageImage: true,
+        isLastMessageText: false,
+      });
+
       await setDoc(doc(db, "messages", messageId), {
         messageId,
         chatId,
@@ -133,7 +151,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         liked: false,
         likedBy: [],
         image: base64,
-        createdAt: Timestamp.fromDate(new Date()),
+        createdAt: date,
       });
 
       return { success: true };
@@ -142,12 +160,22 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const sendMessage = async (userId: string, message: string, imageBase64?: boolean) => {
+  const sendMessage = async (userId: string, message: string) => {
     try {
       const auth = getAuth();
       const user = auth.currentUser;
       const chatId = getChatId(user?.uid, userId);
       const messageId = [chatId, Date.now()].join("-");
+
+      const date = Timestamp.fromDate(new Date());
+
+      await updateDoc(doc(db, "chats", chatId), {
+        lastMessageTime: date?.seconds,
+        lastMessage: message,
+        lastMessageUserId: user?.uid,
+        isLastMessageImage: false,
+        isLastMessageText: true,
+      });
 
       await setDoc(doc(db, "messages", messageId), {
         messageId,
@@ -158,7 +186,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         liked: false,
         likedBy: [],
         image: null,
-        createdAt: Timestamp.fromDate(new Date()),
+        createdAt: date,
       });
 
       return { success: true };
@@ -167,36 +195,22 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  const getUserContacts = async () => {
-    try {
-      let data: any = [];
-      const auth = getAuth();
-      const user = auth.currentUser;
-      const queryContacts: any = query(users, where("userId", "!=", user?.uid));
-      const getContactsFromDoc: any = await getDocs(queryContacts);
-
-      getContactsFromDoc.forEach((contact: any) => {
-        let contactData = { ...contact.data() };
-        data.push({ ...contactData });
-      });
-
-      return { success: true, data };
-    } catch (error: any) {
-      return { success: false, msg: error.message, data: [] };
-    }
-  };
-
-  const handleSignIn = async (email: string, password: string) => {
+  const handleSignIn = async (
+    email: string,
+    password: string,
+    username: string
+  ) => {
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
-        password,
+        password
       );
 
       await setDoc(doc(db, "users", response?.user?.uid), {
         email,
         userId: response?.user?.uid,
+        username,
       });
 
       return { success: true };
@@ -204,6 +218,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       if (error.message.includes("auth/email-already-in-use")) {
         try {
           await signInWithEmailAndPassword(auth, email, password);
+
           return { success: true, msg: error.message };
         } catch (e: any) {
           setUser(null);
@@ -248,7 +263,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         logged,
         createChat,
         sendMessage,
-        getUserContacts,
         setLikeMessage,
         sendImage,
       }}
