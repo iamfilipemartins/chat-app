@@ -58,8 +58,6 @@ const Chat: React.FC = () => {
 
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
         base64: true,
       });
 
@@ -99,8 +97,6 @@ const Chat: React.FC = () => {
 
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
         base64: true,
       });
 
